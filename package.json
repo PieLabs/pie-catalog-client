@@ -1,0 +1,31 @@
+{
+  "name": "pie-catalog-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "css-loader": "^0.26.1",
+    "highlight.js": "^9.9.0",
+    "json-schema-element": "PieLabs/json-schema-element#develop",
+    "less": "^2.7.2",
+    "less-loader": "^2.2.3",
+    "marked": "^0.3.6",
+    "material-elements": "github:pielabs/material-elements",
+    "octicons": "^5.0.1",
+    "raw-loader": "^0.5.1",
+    "style-loader": "^0.13.1",
+    "time-elements": "^0.6.1"
+  },
+  "devDependencies": {
+    "compression-webpack-plugin": "^0.3.2",
+    "fs-extra": "^2.0.0",
+    "gulp": "^3.9.1",
+    "release-helper": "github:pielabs/release-helper#v1.3.0",
+    "webpack": "^2.2.1"
+  }
+}
