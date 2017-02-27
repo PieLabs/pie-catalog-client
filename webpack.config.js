@@ -5,9 +5,9 @@ const CompressionPlugin = require('compression-webpack-plugin');
 module.exports = {
   context: path.join(__dirname),
   entry: {
-    index: './src/entry.js',
-    repo: './src/repo-entry.js',
-    org: './src/org-entry.js'
+    index: './src/entrypoints/index.js',
+    repo: './src/entrypoints/repo.js',
+    org: './src/entrypoints/org.js'
   },
   output: {
     publicPath: '/',
@@ -16,7 +16,6 @@ module.exports = {
     chunkFilename: '[chunkhash].[id].js'
   },
   module: {
-
     loaders: [
       { test: /\.css$/, use: ['raw-loader'] },
       {
