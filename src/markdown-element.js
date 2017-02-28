@@ -1,7 +1,16 @@
 import * as marked from 'marked';
-import * as highlight from 'highlight.js';
+//Note: be selective about what highlighting we import.
+import * as highlight from 'highlight.js/lib/highlight';
+import * as bash from 'highlight.js/lib/languages/bash';
+import * as js from 'highlight.js/lib/languages/javascript';
+import * as json from 'highlight.js/lib/languages/json';
 import * as css from 'highlight.js/styles/default.css';
+
 import { applyStyle, prepareTemplate } from './styles';
+
+highlight.registerLanguage('bash', bash);
+highlight.registerLanguage('javascript', js);
+highlight.registerLanguage('json', json);
 
 const templateHTML = `
     <style>

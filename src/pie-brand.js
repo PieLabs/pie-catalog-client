@@ -25,7 +25,7 @@ const templateHTML = `
     }
     
     </style>
-    <span class="pie">pie catalog</span>
+    <span class="pie"><slot>pie catalog</slot></span>
 `;
 
 export default class PieBrand extends HTMLElement {

@@ -36,7 +36,7 @@ const templateHTML = `
 
 
     </style>
-    <pie-brand></pie-brand>
+    <pie-brand><slot></slot></pie-brand>
     <a href="//pielabs.github.io/pie-docs/" target="_blank">PIE FRAMEWORK</a>
     `;
 

@@ -68,7 +68,7 @@ let init = () => {
       setTimeout(() => {
         container.isLoading(false);
       }, 180)
-    })
+    });
 };
 
 if (document.readyState === 'complete' || document.readyState === 'interactive') {

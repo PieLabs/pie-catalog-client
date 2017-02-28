@@ -103,12 +103,15 @@ const tabHtml = `
   <style>
   :host{
     position: relative;
+    width: 100%;
     display: none;
   }
+  
   :host([selected]){
     opacity: 1.0;
     display: block;
   }
+
   </style>
   <slot></slot>
 `;

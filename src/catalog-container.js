@@ -39,7 +39,7 @@ const template = prepareTemplate(`
     }
 
   </style>
-  <catalog-header></catalog-header> 
+  <catalog-header><slot name="header"></slot></catalog-header> 
   <progress-bar></progress-bar>
   <div id="slot-holder" loading>
     <slot></slot> 
