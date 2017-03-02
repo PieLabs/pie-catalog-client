@@ -1,8 +1,9 @@
-import DemoElement, { model, outcome } from './demo-element';
+import DemoElement, { Config, model, outcome } from './demo-element';
 
 import { elementsDefined } from '../src/bootstrap/repo';
 
 customElements.define('demo-element', DemoElement);
+customElements.define('demo-element-configuration', Config);
 
 let init = () => {
   elementsDefined
@@ -30,13 +31,15 @@ let init = () => {
       }
 
       let demo = document.querySelector('catalog-demo');
-
       demo.markup = `<demo-element pie-id="1"></demo-element>`;
       demo.config = {
         models: [
           {
             id: '1',
-            element: 'demo-element'
+            element: 'demo-element',
+            prompt: 'What is the 1st letter of the alphabet?',
+            placeholder: 'a,b,c...',
+            correctResponse: 'a'
           }
         ]
       }

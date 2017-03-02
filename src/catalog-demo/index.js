@@ -1,29 +1,15 @@
-import { prepareTemplate, applyStyle, boxShadow } from '../styles';
+import { applyStyle, boxShadow, prepareTemplate } from '../styles';
 const templateHTML = `
     <style>
       :host{
-        display: block;
+        display: flex;
+        width: 100%;
+        flex-direction: row;
       }
-
-      control-panel{
-        display: block;
-        padding-bottom: 10px;
-      }
-
-      .pie-panel{
-        border-radius: 10px;
-        ${boxShadow}
-        padding: 10px;
-        margin-top: 20px;
-      }
-
     </style>
-    <control-panel></control-panel>
-    <div class="pie-panel">
-      <slot></slot> 
-    </div>
+    <configuration-panes></configuration-panes>
+    <item-preview></item-preview>
 `;
-
 
 export default class CatalogDemo extends HTMLElement {
   constructor() {
@@ -35,6 +21,10 @@ export default class CatalogDemo extends HTMLElement {
     const template = prepareTemplate(templateHTML, 'catalog-demo');
 
     let sr = applyStyle(this, template);
+
+    this._$itemPreview = sr.querySelector('item-preview');
+    this._$panes = sr.querySelector('configuration-panes');
+
     this._registeredPies = {};
     this._sessions = [];
     this._env = {
@@ -49,36 +39,46 @@ export default class CatalogDemo extends HTMLElement {
   }
 
   connectedCallback() {
-    this.$controlPanel = this.shadowRoot.querySelector('control-panel');
 
-    customElements.whenDefined('control-panel')
-      .then(() => {
-        this.$controlPanel.env = this._env;
-      });
-
-    this.$controlPanel.addEventListener('env-changed', e => {
-      this._updatePies();
-    });
   }
 
   set markup(m) {
     this.innerHTML = m;
+    this._$itemPreview.markup = m;
   }
 
   set config(c) {
     this._config = c;
+    this._$itemPreview.config = c;
 
-    customElements.whenDefined('control-panel')
-      .then(() => {
-        //this.$controlPanel.langs = this._config.langs;
-      });
+    let panes = c.models.map(cfg => {
+      return `<configuration-pane 
+        element-id="${cfg.id}"
+        element-name="${cfg.element}">
+        <${cfg.element}-configuration></${cfg.element}-configuration>
+      </configuration-pane>`
+    });
 
-    this._updatePies();
+    this._$panes.innerHTML = panes.join('\n');
+
+    let paneList = this._$panes.querySelectorAll('configuration-pane');
+    for (var i = 0; i < paneList.length; i++) {
+      let p = paneList[i];
+      let m = c.models.find(m => m.id === p.getAttribute('element-id'));
+      p.model = m;
+    }
+
+    this._$panes.addEventListener('model.updated', (e) => {
+      let { id, element, update } = e.detail;
+      let index = this._config.models.findIndex(m => m.id === id);
+      this._config.models.splice(index, 1, update);
+      this._$itemPreview.config = this._config;
+    });
   }
 
   set controllers(c) {
-    console.log('set controllers: ', c);
     this._controllers = c;
+    this._$itemPreview.controllers = c;
     this._updatePies();
   }
 
