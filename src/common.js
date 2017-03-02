@@ -1,47 +1,29 @@
 require('./common.less');
 
-let define = (name, prototype) => {
-  if (!('customElements' in window)) {
-    throw new Error('customElements isnt defined');
-  }
-
-  if (typeof customElements.define !== 'function') {
-    throw new Error('customElements.define is not defined');
-  }
-  return customElements.define(name, prototype)
-}
-
-import CatalogListings from './listings';
-define('catalog-listings', CatalogListings);
-
-import CatalogListing from './listing';
-define('catalog-listing', CatalogListing);
-
-import CatalogHeader from './header';
-define('catalog-header', CatalogHeader);
-
-import CatalogFooter from './footer';
-define('catalog-footer', CatalogFooter);
-
-import CatalogOrg from './org';
-define('catalog-org', CatalogOrg);
-
-import GithubAvatar from './github-avatar';
-define('github-avatar', GithubAvatar);
-
-import PieBrand from './pie-brand';
-define('pie-brand', PieBrand);
-
-import ProgressBar from './progress-bar';
-define('progress-bar', ProgressBar);
-
 import CatalogContainer from './catalog-container';
-define('catalog-container', CatalogContainer);
+import CatalogFooter from './footer';
+import CatalogHeader from './header';
+import CatalogListing from './listing';
+import CatalogListings from './listings';
+import CatalogOrg from './org';
+import GithubAvatar from './github-avatar';
+import PieBrand from './pie-brand';
+import ProgressBar from './progress-bar';
 
-import { elements } from './client';
+customElements.define('catalog-listings', CatalogListings);
+customElements.define('catalog-listing', CatalogListing);
+customElements.define('catalog-header', CatalogHeader);
+customElements.define('catalog-footer', CatalogFooter);
+customElements.define('catalog-org', CatalogOrg);
+customElements.define('github-avatar', GithubAvatar);
+customElements.define('pie-brand', PieBrand);
+customElements.define('progress-bar', ProgressBar);
+customElements.define('catalog-container', CatalogContainer);
 
-import AvatarService from './avatar-service';
-define('avatar-service', AvatarService);
+// import { elements } from './client';
 
-export { elements };
+// import AvatarService from './avatar-service';
+// define('avatar-service', AvatarService);
+
+// export { elements };
 

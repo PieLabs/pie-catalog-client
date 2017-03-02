@@ -1,4 +1,4 @@
-import { prepareTemplate, applyStyle, noSelect } from '../styles';
+import { applyStyle, noSelect, prepareTemplate } from '../styles';
 
 const tabsHtml = ` 
   <style>
@@ -73,7 +73,6 @@ export class CTabs extends HTMLElement {
   }
 
   _selectTab(index) {
-    console.log('selectTab: ', index, this);
     this._selectTabTitle(index);
     this._selectTabContent(index);
   }
@@ -89,10 +88,8 @@ export class CTabs extends HTMLElement {
 
   _selectTabContent(index) {
     let tabs = this.querySelectorAll('c-tab');
-    console.log('tabs: ', tabs);
     for (var i = 0; i < tabs.length; i++) {
       let selected = index === i;
-      console.log('selected? ', selected);
       let tt = tabs[i];
       selected ? tt.setAttribute('selected', '') : tt.removeAttribute('selected');
     }

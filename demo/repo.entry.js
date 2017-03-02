@@ -1,25 +1,11 @@
-require('../src/common');
+import DemoElement, { model, outcome } from './demo-element';
 
-import * as tabs from '../src/c-tabs';
+import repo from '../src/bootstrap/repo';
 
-import CatalogDemo from '../src/catalog-demo';
-import CatalogEntry from '../src/catalog-entry';
-import ControlPanel from '../src/catalog-demo/control-panel';
+customElements.define('demo-element', DemoElement);
 
-require('material-elements/src/select-field');
-
-customElements.define('catalog-entry', CatalogEntry);
-customElements.define('catalog-demo', CatalogDemo);
-customElements.define('control-panel', ControlPanel);
-
-customElements.define('c-tabs', tabs.CTabs);
-customElements.define('c-tab', tabs.CTab);
-customElements.define('c-tab-title', tabs.CTabTitle);
-
-console.log('test');
 let init = () => {
-
-  customElements.whenDefined('catalog-entry')
+  repo
     .then(() => {
       let entry = document.querySelector('catalog-entry');
       entry.element = {
@@ -27,16 +13,44 @@ let init = () => {
         tag: '0.0.1',
         org: 'my-org',
         package: {
-          description: 'description'
+          description: 'description',
+          dependencies: {
+            a: '1.0.0',
+            b: '2.0.0'
+          }
+        },
+        readme: '# hi \n\n Here is some text',
+        github: {
+          pushed_at: new Date().toISOString(),
+          stargazers_count: 1,
+          watchers_count: 1,
+          forks_count: 1,
+          open_issues_count: 1
         }
       }
-      //disable loading
-      document.querySelector('catalog-container').isLoading(false);
+
+      let demo = document.querySelector('catalog-demo');
+
+      demo.markup = `<demo-element pie-id="1"></demo-element>`;
+      demo.config = {
+        models: [
+          {
+            id: '1',
+            element: 'demo-element'
+          }
+        ]
+      }
+
+      demo.controllers = {
+        'demo-element': { model, outcome }
+      }
+
+      let container = document.querySelector('catalog-container');
+      container.isLoading(false);
+    })
+    .catch(e => {
+      console.error(e);
     });
-
-
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  init();
-});
+document.addEventListener('DOMContentLoaded', init);
