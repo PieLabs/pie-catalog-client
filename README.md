@@ -27,16 +27,16 @@ In `repo` we use webpack's `require.ensure` to load additional logic asynchronou
 
 See the example for a demo.
 
-### browser support
+## Browser support
 
 * Chrome
 * Safari +10.1
 
-#### polyfills
+### polyfills
 
 These elements provide no additional browser support (with the exception of shadycss, which is baked into the source). You are expected to load the polyfills you need yourself.
 
-### Demo
+## Demo
 
 ```shell
 npm install 
