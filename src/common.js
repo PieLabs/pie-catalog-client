@@ -1,5 +1,6 @@
 require('./common.less');
 
+import AvatarService from './avatar-service';
 import CatalogContainer from './catalog-container';
 import CatalogFooter from './footer';
 import CatalogHeader from './header';
@@ -19,11 +20,7 @@ customElements.define('github-avatar', GithubAvatar);
 customElements.define('pie-brand', PieBrand);
 customElements.define('progress-bar', ProgressBar);
 customElements.define('catalog-container', CatalogContainer);
+customElements.define('avatar-service', AvatarService);
 
-// import { elements } from './client';
 
-// import AvatarService from './avatar-service';
-// define('avatar-service', AvatarService);
-
-// export { elements };
-
+export default customElements.whenDefined('catalog-container');

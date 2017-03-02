@@ -1,8 +1,11 @@
-import * as common from '../common';
-
 import { VIEW_ORG } from '../events';
+import common from '../common';
 
-let logic = require.ensure([], () => {
+//Common will resolve first
+export { common };
+
+//logic next 
+export const logic = require.ensure([], () => {
 
   require('material-elements/src/select-field');
 
@@ -34,13 +37,15 @@ let logic = require.ensure([], () => {
   // const RelativeTime = require('time-elements/src/relative-time');
   // customEements.define('relative-time', RelativeTime);
 
-});
+})
+  .then(() => {
+    console.log('logic loaded');
+  });
 
-let elements = [
+let repoElements = [
   'catalog-entry',
   'catalog-demo'
 ];
 
-let defined = elements.map(e => customElements.whenDefined(e));
-
-export default Promise.all([logic].concat(defined));
+//This will happen at the end
+export const elementsDefined = Promise.all(repoElements.map(e => customElements.whenDefined(e)));

@@ -1,11 +1,11 @@
 import DemoElement, { model, outcome } from './demo-element';
 
-import repo from '../src/bootstrap/repo';
+import { elementsDefined } from '../src/bootstrap/repo';
 
 customElements.define('demo-element', DemoElement);
 
 let init = () => {
-  repo
+  elementsDefined
     .then(() => {
       let entry = document.querySelector('catalog-entry');
       entry.element = {
