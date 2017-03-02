@@ -6,8 +6,6 @@ const gulp = require('gulp'),
   fs = require('fs-extra'),
   exec = require('child_process').exec;
 
-
-
 //Init custom release tasks
 releaseHelper.init(gulp);
 

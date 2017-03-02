@@ -7,8 +7,8 @@ module.exports = {
     repo: './repo.entry.js',
   },
   output: {
-    publicPath: '/',
-    path: __dirname,
+    publicPath: '/dist/',
+    path: join(__dirname, 'dist'),
     filename: '[name].bundle.js',
     chunkFilename: '[chunkhash].[id].js'
   },

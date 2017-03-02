@@ -5,6 +5,7 @@
   "scripts": {
     "test": "npm test"
   },
+  "main": "./src/index.js",
   "author": "corespring",
   "license": "ISC",
   "dependencies": {
@@ -20,7 +21,7 @@
     "octicons": "^5.0.1",
     "raw-loader": "^0.5.1",
     "style-loader": "^0.13.1",
-    "time-elements": "^0.6.1"
+    "time-elements": "github/time-elements#custom-elements-v1"
   },
   "devDependencies": {
     "compression-webpack-plugin": "^0.3.2",

@@ -1,5 +1,6 @@
 import * as octicons from 'octicons';
-import { boxShadow, prepareTemplate, applyStyle } from './styles';
+
+import { applyStyle, boxShadow, prepareTemplate } from './styles';
 
 const infoCountTemplate = prepareTemplate(`
       <style>
@@ -67,7 +68,7 @@ const infoPanelTemplate = prepareTemplate(`
         
       </style>
       <span class="no-info">No information from github available</span>
-      <span class="updated" hidden>Last updated <relative-time> </relative-time></span>
+      <span class="updated" hidden></span>
       <github-info-count 
         icon="star" 
         label="stargazers"
@@ -108,7 +109,7 @@ export default class InfoPanel extends HTMLElement {
     });
 
     if (g.pushed_at) {
-      this.shadowRoot.querySelector('relative-time').setAttribute('datetime', g.pushed_at);
+      this.shadowRoot.querySelector('.updated').textContent = Date.parse(g.pushed_at).toString();
       this.shadowRoot.querySelector('.updated').removeAttribute('hidden');
       this.shadowRoot.querySelector('.no-info').setAttribute('hidden', '');
     } else {
