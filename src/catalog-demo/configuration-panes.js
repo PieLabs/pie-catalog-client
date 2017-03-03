@@ -1,5 +1,7 @@
 import { applyStyle, boxShadow, prepareTemplate } from '../styles';
 
+import cloneDeep from 'lodash/cloneDeep';
+
 const templateHTML = `
     <style>
       :host{
@@ -9,7 +11,6 @@ const templateHTML = `
       }
 
     </style>
-    <div>PANES</div>
     <slot></slot>
 `;
 
@@ -61,12 +62,75 @@ export class ConfigurationPane extends HTMLElement {
     const id = this.getAttribute('element-id');
     const name = this.getAttribute('element-name');
     this.shadowRoot.querySelector('.header').textContent = `${id}: ${name}`;
+
+    this.addEventListener('model.updated', e => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      let update = e.detail.update;
+      console.log('new model: ', this._model);
+      this.dispatchEvent(new ConfigurationPaneUpdateEvent(id, name, update));
+    })
   }
 
   set model(m) {
-    this.children[0].model = m;
+    this._model = cloneDeep(m);
+    delete this._model.id;
+    delete this._model.element;
+    this.children[0].model = this._model;
   }
 }
 
+export class ConfigurationPaneUpdateEvent extends CustomEvent {
+  constructor(id, element, update) {
+    super(ConfigurationPaneUpdateEvent.TYPE, {
+      bubbles: true,
+      detail: {
+        id, element, update
+      }
+    });
+  }
+}
+
+ConfigurationPaneUpdateEvent.TYPE = 'configuration-pane.model.updated';
+
+
+const jsonConfigTemplateHTML = `
+    <style>
+      textarea{
+        width: 98%;
+        padding-right: 4px;
+      }
+    </style>
+    <textarea></textarea>`;
+
+const jsonConfigTemplate = prepareTemplate(jsonConfigTemplateHTML, 'json-configuration');
+
+export class JsonConfiguration extends HTMLElement {
+  constructor() {
+    super();
+    let sr = applyStyle(this, jsonConfigTemplate);
+
+    this._$area = sr.querySelector('textarea');
+    console.log('this area', this._$area)
+    this._$area.addEventListener('input', (e) => {
+      try {
+        let update = JSON.parse(e.target.value);
+        this._model = update;
+        this.dispatchEvent(new CustomEvent('model.updated', {
+          bubbles: true,
+          composed: true,
+          detail: { update }
+        }));
+      } catch (e) {
+        //...
+      }
+    });
+  }
+
+  set model(m) {
+    this._model = m;
+    this._$area.value = JSON.stringify(m, null, '  ');
+  }
+}
 
 

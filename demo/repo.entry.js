@@ -32,6 +32,11 @@ let init = () => {
 
       let demo = document.querySelector('catalog-demo');
       demo.markup = `<demo-element pie-id="1"></demo-element>`;
+
+      demo.configureMap = {
+        'demo-element': 'demo-element-configuration'
+      }
+
       demo.config = {
         models: [
           {

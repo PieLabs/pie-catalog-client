@@ -3,11 +3,9 @@ import _ from 'lodash';
 export default class DemoElement extends HTMLElement {
   constructor() {
     super();
-    this.innerHTML = `
-    <span id="prompt"></span> 
+    this.innerHTML = `<span id="prompt"></span> 
     <input type="text"></input>
-    <span id="feedback"></span>
-    `;
+    <span id="feedback"></span>`;
 
     this._$prompt = this.querySelector('#prompt');
     this._$input = this.querySelector('input');
@@ -61,47 +59,56 @@ export class Config extends HTMLElement {
     let sr = this.attachShadow({ mode: 'open' });
     sr.innerHTML = ` 
     <style>
+      :host{
+        display: block;
+      }
+      
       textarea{
         width: 98%;
+        height: 100px;
         padding-right: 4px;
       }
     </style>
-    <textarea></textarea>
+
+    <label>Prompt: <input type="text" name="prompt"></input></label>
+    <br/>
+    <label>Placeholder; <input type="text" name="placeholder"></input></label>
+    <br/>
+    <label>Correct Response: <input type="text" name="correctResponse"></input></label>
     `;
 
-    this._$area = sr.querySelector('textarea');
-    console.log('this area', this._$area)
-    this._$area.addEventListener('input', (e) => {
-      try {
-        let update = JSON.parse(e.target.value);
-        this._model = update;
-        console.log(update);
+    this._$prompt = this._initInput('prompt', (v) => {
+      this._model.prompt = v;
+    });
 
-        if (!this._id || !this._element) {
-          return;
-        }
+    this._$placeholder = this._initInput('placeholder', (v) => {
+      this._model.placeholder = v;
+    });
 
-        this.dispatchEvent(new CustomEvent('model.updated', {
-          bubbles: true,
-          composed: true,
-          detail: {
-            id: this._id,
-            element: this._element,
-            update
-          }
-        }));
-      } catch (e) {
-        //...
-      }
+    this._$correctResponse = this._initInput('correctResponse', (v) => {
+      this._model.correctResponse = v;
     });
   }
 
+  _initInput(name, handler) {
+    let input = this.shadowRoot.querySelector(`input[name="${name}"]`);
+    input.addEventListener('input', e => {
+      handler(e.target.value);
+
+      let detail = {
+        update: this._model
+      }
+
+      this.dispatchEvent(new CustomEvent('model.updated', { bubbles: true, detail }))
+    });
+    return input;
+  }
+
   set model(m) {
-    console.log('demo-element-config: model: ', m);
     this._model = m;
-    this._id = m.id;
-    this._element = m.element;
-    this._$area.value = JSON.stringify(m, null, '  ');
+    this._$prompt.value = this._model.prompt;
+    this._$placeholder.value = this._model.placeholder;
+    this._$correctResponse.value = this._model.correctResponse;
   }
 }
 
