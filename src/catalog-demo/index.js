@@ -10,7 +10,13 @@ const templateHTML = `
         width: 100%;
         flex-direction: row;
       }
+
+      ::slotted(*) {
+        padding-right: 10px;
+      }
+      
     </style>
+    <slot name="configure"></slot>
     <item-preview><slot></slot></item-preview>
 `;
 
@@ -78,10 +84,6 @@ export default class CatalogDemo extends HTMLElement {
    */
   set configureMap(m) {
     this._configureMap = m;
-    if (this._configureMap !== undefined) {
-      this._$panes = document.createElement('configuration-panes');
-      this.shadowRoot.insertBefore(this._$panes, this.shadowRoot.firstElementChild);
-    }
   }
 
   /**
@@ -113,16 +115,21 @@ export default class CatalogDemo extends HTMLElement {
       </configuration-pane>`
     });
 
-    this._$panes.innerHTML = panes.join('\n');
+    //add via the configure slot
+    let div = document.createElement('div');
+    div.setAttribute('slot', 'configure');
+    div.innerHTML = panes.join('\n');
+    this.appendChild(div);
 
-    let paneList = this._$panes.querySelectorAll('configuration-pane');
+    let paneList = this.querySelectorAll('configuration-pane');
+
     for (var i = 0; i < paneList.length; i++) {
       let p = paneList[i];
       let m = this._config.models.find(m => m.id === p.getAttribute('element-id'));
       p.model = m;
     }
 
-    this._$panes.addEventListener(ConfigurationPaneUpdateEvent.TYPE, (e) => {
+    this.addEventListener(ConfigurationPaneUpdateEvent.TYPE, (e) => {
       let { id, element, update } = e.detail;
       let index = this._config.models.findIndex(m => m.id === id);
       update = merge(update, { id, element });

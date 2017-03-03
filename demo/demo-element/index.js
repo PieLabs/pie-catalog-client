@@ -3,6 +3,9 @@ import _ from 'lodash';
 export default class DemoElement extends HTMLElement {
   constructor() {
     super();
+  }
+
+  connectedCallback() {
     this.innerHTML = `<span id="prompt"></span> 
     <input type="text"></input>
     <span id="feedback"></span>`;
@@ -15,9 +18,6 @@ export default class DemoElement extends HTMLElement {
     });
 
     this._$feedback = this.querySelector('#feedback');
-  }
-
-  connectedCallback() {
     this.dispatchEvent(new CustomEvent('pie.register', { bubbles: true }));
   }
 
@@ -56,25 +56,34 @@ export default class DemoElement extends HTMLElement {
 export class Config extends HTMLElement {
   constructor() {
     super();
-    let sr = this.attachShadow({ mode: 'open' });
-    sr.innerHTML = ` 
-    <style>
-      :host{
-        display: block;
-      }
-      
-      textarea{
-        width: 98%;
-        height: 100px;
-        padding-right: 4px;
-      }
-    </style>
+    // let sr = this.attachShadow({ mode: 'open' });
+  }
 
-    <label>Prompt: <input type="text" name="prompt"></input></label>
-    <br/>
-    <label>Placeholder; <input type="text" name="placeholder"></input></label>
-    <br/>
-    <label>Correct Response: <input type="text" name="correctResponse"></input></label>
+  _initInput(name, handler) {
+    let input = this.querySelector(`input[name="${name}"]`);
+    input.addEventListener('input', e => {
+      handler(e.target.value);
+
+      let detail = {
+        update: this._model
+      }
+
+      this.dispatchEvent(new CustomEvent('model.updated', { bubbles: true, detail }))
+    });
+    return input;
+  }
+
+
+  connectedCallback() {
+    this.innerHTML = ` 
+      <div class="config-pane">
+      demo element!!
+      <label>Prompt: <input type="text" name="prompt"></input></label>
+      <br/>
+      <label>Placeholder; <input type="text" name="placeholder"></input></label>
+      <br/>
+      <label>Correct Response: <input type="text" name="correctResponse"></input></label>
+    </div>
     `;
 
     this._$prompt = this._initInput('prompt', (v) => {
@@ -89,21 +98,6 @@ export class Config extends HTMLElement {
       this._model.correctResponse = v;
     });
   }
-
-  _initInput(name, handler) {
-    let input = this.shadowRoot.querySelector(`input[name="${name}"]`);
-    input.addEventListener('input', e => {
-      handler(e.target.value);
-
-      let detail = {
-        update: this._model
-      }
-
-      this.dispatchEvent(new CustomEvent('model.updated', { bubbles: true, detail }))
-    });
-    return input;
-  }
-
   set model(m) {
     this._model = m;
     this._$prompt.value = this._model.prompt;
