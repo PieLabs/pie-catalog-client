@@ -52,16 +52,16 @@ export default class ItemPreview extends HTMLElement {
   }
 
   connectedCallback() {
-    // this.$controlPanel = this.shadowRoot.querySelector('control-panel');
+    this.$controlPanel = this.shadowRoot.querySelector('control-panel');
 
-    // customElements.whenDefined('control-panel')
-    //   .then(() => {
-    //     this.$controlPanel.env = this._env;
-    //   });
+    customElements.whenDefined('control-panel')
+      .then(() => {
+        this.$controlPanel.env = this._env;
+      });
 
-    // this.$controlPanel.addEventListener('env-changed', e => {
-    //   this._updatePies();
-    // });
+    this.$controlPanel.addEventListener('env-changed', e => {
+      this._updatePies();
+    });
   }
 
   set markup(m) {
