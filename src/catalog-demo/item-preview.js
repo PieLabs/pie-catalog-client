@@ -28,7 +28,9 @@ const templateHTML = `
 
 
 const template = prepareTemplate(templateHTML, 'item-preview');
-
+/**
+ * Note: 
+ */
 export default class ItemPreview extends HTMLElement {
   constructor() {
     super();
@@ -42,6 +44,7 @@ export default class ItemPreview extends HTMLElement {
     }
 
     this.addEventListener('pie.register', (e) => {
+      console.log('got a pie.register')
       let id = e.target.getAttribute('pie-id');
       this._registeredPies[id] = e.target;
       this._updatePies();
@@ -49,16 +52,16 @@ export default class ItemPreview extends HTMLElement {
   }
 
   connectedCallback() {
-    this.$controlPanel = this.shadowRoot.querySelector('control-panel');
+    // this.$controlPanel = this.shadowRoot.querySelector('control-panel');
 
-    customElements.whenDefined('control-panel')
-      .then(() => {
-        this.$controlPanel.env = this._env;
-      });
+    // customElements.whenDefined('control-panel')
+    //   .then(() => {
+    //     this.$controlPanel.env = this._env;
+    //   });
 
-    this.$controlPanel.addEventListener('env-changed', e => {
-      this._updatePies();
-    });
+    // this.$controlPanel.addEventListener('env-changed', e => {
+    //   this._updatePies();
+    // });
   }
 
   set markup(m) {

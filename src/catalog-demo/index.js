@@ -11,8 +11,7 @@ const templateHTML = `
         flex-direction: row;
       }
     </style>
-    <!-- <configuration-panes hidden></configuration-panes> -->
-    <item-preview></item-preview>
+    <item-preview><slot></slot></item-preview>
 `;
 
 export default class CatalogDemo extends HTMLElement {
@@ -58,10 +57,11 @@ export default class CatalogDemo extends HTMLElement {
    * ```html
    *   <div><my-pie pie-id="1"></my-pie></div>
    * ```
+   * 
+   * > Note: the markup must remain in the light dom to allow styling to take effect
    */
   set markup(m) {
     this.innerHTML = m;
-    this._$itemPreview.markup = m;
   }
 
   /**
