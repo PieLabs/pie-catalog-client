@@ -9,7 +9,7 @@
   "author": "corespring",
   "license": "ISC",
   "dependencies": {
-    "@webcomponents/shadycss": "github:webcomponents/shadycss#fad9a08c20918a8633b82ff28416138ad1d669e0",
+    "@webcomponents/shadycss": "github:webcomponents/shadycss#f09feb7321f4f2de76f8e201e066674df7dc7da4",
     "css-loader": "^0.26.1",
     "highlight.js": "^9.9.0",
     "json-schema-element": "PieLabs/json-schema-element#develop",
