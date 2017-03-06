@@ -17,7 +17,7 @@ const templateHTML = `
       
     </style>
     <slot name="configure"></slot>
-    <item-preview><slot></slot></item-preview>
+    <item-preview><slot name="preview"></slot></item-preview>
 `;
 
 export default class CatalogDemo extends HTMLElement {
@@ -67,7 +67,16 @@ export default class CatalogDemo extends HTMLElement {
    * > Note: the markup must remain in the light dom to allow styling to take effect
    */
   set markup(m) {
-    this.innerHTML = m;
+
+    let existing = this.querySelector('[slot="preview"]');
+    if (existing) {
+      this.removeChild(existing)
+    }
+
+    const div = document.createElement('div');
+    div.setAttribute('slot', 'preview');
+    div.innerHTML = m;
+    this.appendChild(div);
   }
 
   /**
