@@ -93,6 +93,7 @@ export default class CatalogDemo extends HTMLElement {
    */
   set configureMap(m) {
     this._configureMap = m;
+    this._addConfigurationPanes();
   }
 
   /**
@@ -110,7 +111,7 @@ export default class CatalogDemo extends HTMLElement {
 
   _addConfigurationPanes() {
 
-    if (!this._configureMap) {
+    if (!this._configureMap || !this._config || !this._config.models) {
       return;
     }
 
