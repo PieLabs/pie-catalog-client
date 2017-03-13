@@ -1,4 +1,7 @@
-import { prepareTemplate, applyStyle, boxShadow } from '../styles';
+import { applyStyle, boxShadow, prepareTemplate } from '../styles';
+
+import ElementModels from './element-models';
+
 const templateHTML = `
     <style>
       :host{
@@ -28,6 +31,7 @@ const templateHTML = `
 export default class CatalogDemo extends HTMLElement {
   constructor() {
     super();
+
 
     /** Note: can't use shadow root if the inner element is dependentent 
      * on style definitions that uses markup from inside the element.
@@ -74,6 +78,10 @@ export default class CatalogDemo extends HTMLElement {
       });
 
     this._updatePies();
+
+    if (this._config.elementModels) {
+      this._elementModels = new ElementModels(this, this._config.elementModels);
+    }
   }
 
   set controllers(c) {
@@ -90,6 +98,7 @@ export default class CatalogDemo extends HTMLElement {
     }
     return session;
   }
+
 
   _updatePies() {
     if (!this._config || !this._controllers) {
