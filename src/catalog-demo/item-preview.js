@@ -99,17 +99,23 @@ export default class ItemPreview extends HTMLElement {
       return;
     }
 
-    Object.keys(this._registeredPies).forEach(id => {
+    let promises = Object.keys(this._registeredPies).map(id => {
       let node = this._registeredPies[id];
       let model = this._config.models.find(v => v.id === id);
       let session = this._getSessionById(id)
       let controller = this._controllers[node.nodeName.toLowerCase()];
-      controller.model(model, session, this._env)
-        .then(m => {
-          node.session = session;
-          node.model = m;
-        });
+      return controller.model(model, session, this._env)
+        .then(m => ({ id: id, model: m, session: session }));
     });
+
+    Promise.all(promises)
+      .then(results => {
+        results.forEach(({ id, model, session }) => {
+          const node = this._registeredPies[id];
+          node.session = session;
+          node.model = model;
+        });
+      });
   }
 
 }
