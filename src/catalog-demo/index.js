@@ -1,6 +1,7 @@
 import { applyStyle, boxShadow, prepareTemplate } from '../styles';
 
 import { ConfigurationPaneUpdateEvent } from './configuration-panes';
+import ElementModels from './element-models';
 import merge from 'lodash/merge';
 
 const templateHTML = `
@@ -107,6 +108,17 @@ export default class CatalogDemo extends HTMLElement {
     this._$itemPreview.config = c;
 
     this._addConfigurationPanes();
+
+    customElements.whenDefined('control-panel')
+      .then(() => {
+        //this.$controlPanel.langs = this._config.langs;
+      });
+
+    this._updatePies();
+
+    if (this._config.elementModels) {
+      this._elementModels = new ElementModels(this, this._config.elementModels);
+    }
   }
 
   _addConfigurationPanes() {
@@ -157,6 +169,7 @@ export default class CatalogDemo extends HTMLElement {
     }
     return session;
   }
+
 
   _updatePies() {
     if (!this._config || !this._controllers) {
