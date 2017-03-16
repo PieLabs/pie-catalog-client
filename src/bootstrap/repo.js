@@ -32,6 +32,12 @@ export const logic = require.ensure([], () => {
   customElements.define('catalog-demo', CatalogDemo);
   const { default: ControlPanel } = require('../catalog-demo/control-panel');
   customElements.define('control-panel', ControlPanel);
+  const { default: ItemPreview } = require('../catalog-demo/item-preview');
+  customElements.define('item-preview', ItemPreview);
+  const { default: ConfigurationPanes, ConfigurationPane, JsonConfiguration } = require('../catalog-demo/configuration-panes');
+  customElements.define('configuration-panes', ConfigurationPanes);
+  customElements.define('configuration-pane', ConfigurationPane);
+  customElements.define('json-configuration', JsonConfiguration);
 
   //not ready yet...
   // const RelativeTime = require('time-elements/src/relative-time');
