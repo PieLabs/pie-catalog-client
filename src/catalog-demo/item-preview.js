@@ -64,10 +64,6 @@ export default class ItemPreview extends HTMLElement {
     });
   }
 
-  set markup(m) {
-    this.innerHTML = m;
-  }
-
   set config(c) {
     this._config = c;
 

@@ -36,12 +36,6 @@ export default class CatalogDemo extends HTMLElement {
     this._env = {
       mode: 'gather'
     }
-
-    this.addEventListener('pie.register', (e) => {
-      let id = e.target.getAttribute('pie-id');
-      this._registeredPies[id] = e.target;
-      this._updatePies();
-    });
   }
 
   /**
@@ -53,16 +47,18 @@ export default class CatalogDemo extends HTMLElement {
    * ```
    */
   set controllers(c) {
-    this._controllers = c;
     this._$itemPreview.controllers = c;
-    this._updatePies();
   }
 
   /**
    * Set the pie item markup.
    * eg: 
    * ```html
-   *   <div><my-pie pie-id="1"></my-pie></div>
+   *   <catalog-demo>
+   *     <div slot="preview">
+   *       <my-pie pie-id="1"></my-pie> 
+   *     </div>
+   *   </catalog-demo>
    * ```
    * 
    * > Note: the markup must remain in the light dom to allow styling to take effect
@@ -113,8 +109,6 @@ export default class CatalogDemo extends HTMLElement {
       .then(() => {
         //this.$controlPanel.langs = this._config.langs;
       });
-
-    this._updatePies();
 
     if (this._config.elementModels) {
       this._elementModels = new ElementModels(this, this._config.elementModels);
@@ -168,24 +162,5 @@ export default class CatalogDemo extends HTMLElement {
       this._sessions.push(session);
     }
     return session;
-  }
-
-
-  _updatePies() {
-    if (!this._config || !this._controllers) {
-      return;
-    }
-
-    Object.keys(this._registeredPies).forEach(id => {
-      let node = this._registeredPies[id];
-      let model = this._config.models.find(v => v.id === id);
-      let session = this._getSessionById(id)
-      let controller = this._controllers[node.nodeName.toLowerCase()];
-      controller.model(model, session, this._env)
-        .then(m => {
-          node.session = session;
-          node.model = m;
-        });
-    });
   }
 }
