@@ -1,5 +1,6 @@
 import * as events from './events';
-import { prepareTemplate, applyStyle, boxShadow } from './styles';
+
+import { applyStyle, boxShadow, prepareTemplate } from './styles';
 
 const templateHTML = `
     <style>
@@ -106,7 +107,7 @@ export default class CatalogEntry extends HTMLElement {
 
     this.shadowRoot.querySelector('#repo').textContent = e.repo;
     this.shadowRoot.querySelector('#version').textContent = e.tag;
-    this.shadowRoot.querySelector('#org').textContent = `${e.org}`;
+    this.shadowRoot.querySelector('#org').textContent = e.org;
     this.shadowRoot.querySelector('github-avatar').setAttribute('user', e.org);
 
     this.shadowRoot.querySelector('#org').addEventListener('click', (e) => {

@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../test-build/bundle.js"></script>
+</head>
+
+<body>
+  <catalog-demo></catalog-demo>
+  <script>
+    describe('<catalog-demo>', () => {
+
+
+      let cd;
+
+      before(() => {
+        return elementsDefined
+          .then(() => customElements.whenDefined('catalog-demo'))
+          .then(() => {
+            cd = document.querySelector('catalog-demo');
+          })
+      });
+
+      describe('set controllers', () => {
+        let controllersStub;
+
+        before(() => {
+          controllersStub = sinon.stub();
+          cd._$itemPreview = {}
+          Object.defineProperty(cd._$itemPreview, 'controllers', { set: controllersStub });
+        });
+
+        it('sets item preview controllers', () => {
+          cd.controllers = {};
+          sinon.assert.calledWith(controllersStub, {});
+        });
+      });
+
+      describe('set markup', () => {
+        it('sets the html in the preview slot', () => {
+          cd.markup = 'hi';
+          expect(cd.innerHTML).to.eql('<div slot="preview">hi</div>')
+        });
+      });
+
+      describe('set configureMap', () => {
+
+        let configureSlot, configStub;
+        before(() => {
+          configStub = sinon.stub();
+
+          cd._$itemPreview = {}
+          Object.defineProperty(cd._$itemPreview, 'config', { set: configStub });
+
+          cd.config = {
+            models: [
+              { id: '1', element: 'my-el' }
+            ]
+          };
+          cd.configureMap = {
+            'my-el': 'my-el-configure'
+          }
+          configureSlot = cd.querySelector('[slot="configure"]');
+        });
+
+        it('wraps the element in a configuration-pane', () => {
+          let wrapper = configureSlot.children[0];
+          expect(wrapper.tagName.toLowerCase()).to.eql('configuration-pane');
+          expect(wrapper.getAttribute('element-id')).to.eql('1');
+          expect(wrapper.getAttribute('element-name')).to.eql('my-el');
+          expect(wrapper.children[0].tagName.toLowerCase()).to.eql('my-el-configure');
+        });
+
+        it('adds an update listener', () => {
+          let wrapper = configureSlot.children[0];
+          let event = new CustomEvent('configuration-pane.model.updated', {
+            bubbles: true,
+            detail: {
+              id: '1',
+              element: 'my-el',
+              update: { update: true }
+            }
+          });
+          wrapper.dispatchEvent(event);
+          sinon.assert.calledWith(configStub, { models: [{ element: 'my-el', id: '1', update: true }] });
+        });
+
+      });
+
+    });
+  </script>
+</body>
+
+</html>

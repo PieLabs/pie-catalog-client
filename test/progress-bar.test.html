@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../test-build/bundle.js"></script>
+</head>
+
+<body>
+  <progress-bar></progress-bar>
+  <script>
+    describe('<progress-bar>', function () {
+      let pb;
+      before(() => {
+        return elementsDefined
+          .then(() => customElements.whenDefined('progress-bar'))
+          .then(() => {
+            pb = document.querySelector('progress-bar');
+          });
+      });
+
+      it('enable adds [loading=""] to #progress', function () {
+        pb.enable();
+        let holder = pb.shadowRoot.querySelector('#progress');
+        expect(holder.hasAttribute('loading')).to.be.true;
+      });
+
+      it('disable removes [loading=""] from #progress', function () {
+        pb.enable();
+        pb.disable();
+        let holder = pb.shadowRoot.querySelector('#progress');
+        expect(holder.hasAttribute('loading')).to.false;
+      });
+    });
+  </script>
+</body>
+
+</html>

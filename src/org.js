@@ -1,4 +1,4 @@
-import { prepareTemplate, applyStyle } from './styles';
+import { applyStyle, prepareTemplate } from './styles';
 
 const template = prepareTemplate(`
     <style>

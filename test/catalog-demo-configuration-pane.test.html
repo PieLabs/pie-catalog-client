@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../test-build/bundle.js"></script>
+  <script>
+    class DummyPane extends HTMLElement {
+      constructor() {
+        super();
+        this._setModel = sinon.stub();
+        Object.defineProperty(this, 'model', { set: this._setModel });
+      }
+    }
+
+    customElements.define('dummy-pane', DummyPane);
+  </script>
+</head>
+
+<body>
+  <configuration-pane element-id="1" element-name="dummy-pane">
+    <dummy-pane></dummy-pane>
+  </configuration-pane>
+  <script>
+    describe('<configuration-pane>', () => {
+
+      let cp, dummyPane;
+
+      before(() => {
+        return elementsDefined
+          .then(() => customElements.whenDefined('configuration-pane'))
+          .then(() => customElements.whenDefined('dummy-pane'))
+          .then(() => {
+            cp = document.querySelector('configuration-pane');
+            dummyPane = document.querySelector('dummy-pane');
+          })
+      });
+
+      describe('set model', () => {
+        before(() => {
+          cp.model = { dummy: true, id: '1', element: 'dummy-pane' };
+        });
+
+        it('sets dummy-pane.model', () => {
+          sinon.assert.calledWith(dummyPane._setModel, { dummy: true });
+        });
+      });
+
+      describe('model.updated listener', () => {
+        let handler, event;
+
+        beforeEach(() => {
+          handler = sinon.spy(function (e) {
+            console.log('event: ', e);
+            event = e;
+          });
+
+          cp.model = { id: '1', element: 'dummy-pane' };
+          cp.addEventListener('configuration-pane.model.updated', handler);
+          dummyPane.dispatchEvent(new CustomEvent('model.updated', {
+            bubbles: true, detail: {
+              update: { data: 'update' }
+            }
+          }));
+        });
+
+        it('triggers a configuration-pane.model.updated event', () => {
+          sinon.assert.called(handler);
+        });
+
+        it('the event.detail.id is 1', () => {
+          expect(event.detail.id).to.eql('1');
+        });
+
+        it('the event.detail.element is dummy-pane', () => {
+          expect(event.detail.element).to.eql('dummy-pane');
+        });
+
+        it('the event.detail.update is {data: \'update\'}', () => {
+          expect(event.detail.update).to.eql({ data: 'update' });
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

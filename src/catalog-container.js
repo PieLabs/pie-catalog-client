@@ -54,10 +54,7 @@ export default class CatalogContainer extends HTMLElement {
     super();
     let sr = applyStyle(this, template)
     this._$slotHolder = sr.querySelector('#slot-holder');
-  }
-
-  get _progressBar() {
-    return this.shadowRoot.querySelector('progress-bar');
+    this._progressBar = this.shadowRoot.querySelector('progress-bar');
   }
 
   get _content() {
