@@ -1,5 +1,6 @@
 import * as events from './events';
-import { prepareTemplate, applyStyle, boxShadow } from './styles';
+
+import { applyStyle, boxShadow, prepareTemplate } from './styles';
 
 const templateHTML = `
     <style>
@@ -121,9 +122,9 @@ export default class CatalogListing extends HTMLElement {
       this.dispatchEvent(events.viewOrg(this._element));
     };
 
-    this.shadowRoot.querySelector('#repo').addEventListener('click', onRepoClick);
-    this.shadowRoot.querySelector('#description').addEventListener('click', onRepoClick);
-    this.shadowRoot.querySelector('#org').addEventListener('click', onOrgClick);
+    this._$repo.addEventListener('click', onRepoClick);
+    this._$description.addEventListener('click', onRepoClick);
+    this._$org.addEventListener('click', onOrgClick);
   }
 
 }

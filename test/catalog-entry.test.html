@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../test-build/bundle.js"></script>
+</head>
+
+<body>
+  <catalog-entry>The demo is here!</catalog-entry>
+  <script>
+    describe('<catalog-entry>', () => {
+
+
+      let ce;
+
+      before(() => {
+        return elementsDefined
+          .then(() => customElements.whenDefined('catalog-entry'))
+          .then(() => {
+            ce = document.querySelector('catalog-entry');
+          })
+      });
+
+      describe('set element', () => {
+        let element = {
+          repo: 'repo',
+          tag: '1.0.0',
+          org: 'org',
+          github: {},
+          readme: '# hi',
+          package: {
+            description: 'description',
+            dependencies: {
+              a: '1.0.0',
+              b: '2.0.0'
+            }
+          }
+        }
+
+        let infoPanel, githubStub, markdownStub, dependenciesStub;
+
+        before(() => {
+          githubStub = sinon.stub();
+          markdownStub = sinon.stub();
+          dependenciesStub = sinon.stub();
+          let qs = ce.shadowRoot.querySelector.bind(ce.shadowRoot);
+          Object.defineProperty(qs('info-panel'), 'github', { set: githubStub });
+          Object.defineProperty(qs('markdown-element'), 'markdown', { set: markdownStub });
+          Object.defineProperty(qs('dependencies-panel'), 'dependencies', { set: dependenciesStub });
+          ce.element = element;
+        });
+
+        let assertRender = (selector, expected, propName) => {
+
+          it('renders ' + expected + ' to ' + selector, () => {
+            propName = propName || 'textContent';
+            let el = ce.shadowRoot.querySelector(selector);
+            if (propName === 'textContent') {
+              expect(el.textContent).to.eql(expected);
+            } else {
+              expect(el.getAttribute(propName)).to.eql(expected);
+            }
+          });
+        }
+
+        assertRender('#repo', element.repo);
+        assertRender('#version', element.tag);
+        assertRender('#org', element.org);
+        assertRender('github-avatar', element.org, 'user');
+
+        it('sets info-panel.github', () => {
+          return customElements.whenDefined('info-panel')
+            .then(() => {
+              sinon.assert.calledWith(githubStub, {});
+            });
+        });
+
+        it('sets dependencies-panel.dependencies', () => {
+          return customElements.whenDefined('dependencies-panel')
+            .then(() => {
+              sinon.assert.calledWith(dependenciesStub, element.package.dependencies);
+            });
+        });
+
+        it('sets markdown-element.markdown', () => {
+          sinon.assert.calledWith(markdownStub, '# hi');
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

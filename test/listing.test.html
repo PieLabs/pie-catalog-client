@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../test-build/bundle.js"></script>
+</head>
+
+<body>
+  <catalog-listing></catalog-listing>
+  <script>
+    describe('<catalog-listing>', () => {
+
+      let cl;
+      before(() => {
+        return elementsDefined
+          .then(() => customElements.whenDefined('catalog-listing'))
+          .then(() => {
+            cl = document.querySelector('catalog-listing');
+          });
+      });
+
+      describe('set element', () => {
+
+        before(() => {
+          cl.element = {
+            org: 'org',
+            repo: 'repo',
+            tag: '1.0.0',
+            description: 'description'
+          };
+        });
+
+        it('renders org', () => {
+          expect(cl._$org.textContent).to.eql('org');
+        });
+
+        it('renders repo', () => {
+          expect(cl._$repo.textContent).to.eql('repo');
+        });
+
+        it('renders tag', () => {
+          expect(cl._$tag.textContent).to.eql('1.0.0');
+        });
+
+        it('renders description', () => {
+          expect(cl._$description.textContent).to.eql('description');
+        });
+
+        it('sets <github-avatar user="org"></github-avatar>', () => {
+          expect(cl._$avatar.getAttribute('user')).to.eql('org');
+        });
+
+        let assertClick = (eventExpected, clickTarget) => {
+          return () => {
+            let eventReceived = false;
+
+            let handler = () => {
+              eventReceived = true;
+            };
+
+            cl.addEventListener(eventExpected, handler);
+
+            let event = new MouseEvent('click', {
+              'view': window,
+              'bubbles': true,
+              'cancelable': true
+            });
+
+            cl[clickTarget].dispatchEvent(event);
+            expect(eventReceived).to.be.true;
+            cl.removeEventListener(eventExpected, handler);
+          }
+        }
+
+        it('clicking repo dispatches a view repo event', assertClick('view-repo', '_$repo'));
+        it('clicking description dispatches a view repo event', assertClick('view-repo', '_$description'));
+        it('clicking org dispatches a view org event', assertClick('view-org', '_$org'));
+
+      });
+    });
+  </script>
+</body>
+
+</html>

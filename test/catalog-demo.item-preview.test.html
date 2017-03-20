@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../test-build/bundle.js"></script>
+  <script>
+    class DummyPie extends HTMLElement {
+      constructor() {
+        super();
+      }
+      connectedCallback() {
+        this.dispatchEvent(new CustomEvent('pie.register', { bubbles: true }));
+      }
+    }
+    customElements.define('dummy-pie', DummyPie);
+  </script>
+</head>
+
+<body>
+  <item-preview>
+  </item-preview>
+  <script>
+    describe('<item-preview>', () => {
+
+      let ip, controllers;
+
+      before(() => {
+
+        controllers = {
+          'dummy-pie': {
+            model: sinon.stub().returns(Promise.resolve({ result: 'dummy-pie' }))
+          }
+        }
+
+        console.log('elements defined? ', elementsDefined);
+        return elementsDefined
+          .then(() => customElements.whenDefined('item-preview'))
+          .then(() => customElements.whenDefined('dummy-pie'))
+          .then(() => {
+            ip = document.querySelector('item-preview');
+            ip.config = {
+              models: [
+                { id: '1', element: 'dummy-pie' }
+              ]
+            }
+            ip.controllers = controllers;
+
+            ip.innerHTML = `<dummy-pie pie-id="1"></dummy-pie>`;
+          });
+      });
+
+      describe('set config', () => {
+
+        it('calls controllers[pie-tag-name].model', () => {
+          sinon.assert.calledWith(controllers['dummy-pie'].model, { id: '1', element: 'dummy-pie' });
+        });
+
+        it('sets the model on the pie element', () => {
+          expect(ip.querySelector('dummy-pie').model).to.eql({ result: 'dummy-pie' });
+        });
+
+        it('sets the session on the pie element', () => {
+          expect(ip.querySelector('dummy-pie').session).to.eql({ id: '1' });
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

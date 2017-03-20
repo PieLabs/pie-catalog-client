@@ -1,6 +1,6 @@
 {
   "name": "pie-catalog-client",
-  "version": "0.3.0",
+  "version": "0.4.0-prerelease",
   "description": "The client code for the catalog",
   "scripts": {
     "test": "npm test"
@@ -19,14 +19,14 @@
     "time-elements": "github/time-elements#custom-elements-v1"
   },
   "devDependencies": {
-    "raw-loader": "^0.5.1",
-    "style-loader": "^0.13.1",
-    "less-loader": "^2.2.3",
-    "css-loader": "^0.26.1",
     "compression-webpack-plugin": "^0.3.2",
+    "css-loader": "^0.26.1",
     "fs-extra": "^2.0.0",
     "gulp": "^3.9.1",
+    "less-loader": "^2.2.3",
+    "raw-loader": "^0.5.1",
     "release-helper": "github:pielabs/release-helper#v1.3.0",
+    "style-loader": "^0.13.1",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.1"
   }

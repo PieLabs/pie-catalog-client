@@ -46,3 +46,19 @@ cd demo
 # then go to localhost:8080
 
 ```
+
+## Test 
+
+Until the new web component tester is released - we have to clone and build:
+
+```shell
+git clone git@github.com:Polymer/web-component-tester.git
+cd web-component-tester
+git checkout v6.0.0-prerelease.6
+npm link
+# wct is now available as an executable
+cd pie-catalog-client
+npm test
+```
+
+Once it's released we can just add it to the `devDependencies`, and update the npm test cmd.

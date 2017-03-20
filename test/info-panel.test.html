@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../test-build/bundle.js"></script>
+</head>
+
+<body>
+  <info-panel></info-panel>
+  <script>
+    describe('<info-panel>', () => {
+
+      let ip;
+      before(() => {
+        return elementsDefined
+          .then(() => customElements.whenDefined('info-panel'))
+          .then(() => {
+            ip = document.querySelector('info-panel');
+          })
+      });
+
+      describe('set github', () => {
+
+        describe('with no data', () => {
+          it('displays the no-info pane', () => {
+            let noInfo = ip.shadowRoot.querySelector('.no-info');
+            expect(noInfo.hasAttribute('hidden')).to.be.false;
+            let updated = ip.shadowRoot.querySelector('.updated');
+            expect(updated.hasAttribute('hidden')).to.be.true;
+          });
+        });
+
+        describe('with data', () => {
+
+          before(() => {
+            ip.github = {
+              open_issues_count: 1,
+              forks_count: 2,
+              watchers_count: 3,
+              stargazers_count: 4
+            }
+          });
+
+          let assertCount = (selector, expectedCount) => {
+            it('sets the count on <github-info-count ' + selector + ' >', () => {
+              let infoCount = ip.shadowRoot.querySelector(selector);
+              let c = infoCount.shadowRoot.querySelector('label').textContent;
+              expect(c).to.eql(expectedCount.toString());
+            });
+          }
+
+          assertCount('[label="open issues"]', 1);
+          assertCount('[label="forks"]', 2);
+          assertCount('[label="watchers"]', 3);
+          assertCount('[label="stargazers"]', 4);
+        });
+
+      });
+    });
+  </script>
+</body>
+
+</html>

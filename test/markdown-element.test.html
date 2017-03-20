@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../test-build/bundle.js"></script>
+</head>
+
+<body>
+  <markdown-element></markdown-element>
+  <script>
+    describe('<markdown-element>', () => {
+
+      let md;
+      before(() => {
+        return elementsDefined
+          .then(() => customElements.whenDefined('markdown-element'))
+          .then(() => {
+            md = document.querySelector('markdown-element');
+          });
+      });
+
+      describe('set markdown', () => {
+
+        before(() => {
+          md.markdown = `# hi`;
+        });
+
+        it('renders the markdown', () => {
+          let rendered = md.shadowRoot.querySelector('div').innerHTML;
+          expect(rendered).to.eql('<h1 id="hi">hi</h1>\n');
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

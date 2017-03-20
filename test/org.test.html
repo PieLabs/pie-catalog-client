@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../test-build/bundle.js"></script>
+</head>
+
+<body>
+  <catalog-org></catalog-org>
+  <script>
+    describe('<catalog-org>', () => {
+
+      let o;
+      before(() => {
+        return elementsDefined
+          .then(() => customElements.whenDefined('catalog-org'))
+          .then(() => {
+            o = document.querySelector('catalog-org');
+          })
+      });
+
+      describe('set org', () => {
+
+        before(() => {
+          o.org = {
+            org: 'org',
+            elements: [
+              {
+                org: 'org',
+                repo: 'repo',
+                version: '1.0.0'
+              }
+            ]
+          }
+        });
+
+        it('adds org name to #org', () => {
+          let content = o.shadowRoot.querySelector('#org').textContent;
+          expect(content).to.eql('org');
+        });
+
+        it('adds <catalog-listing> elements to elements', () => {
+          let elementsHtml = o.shadowRoot.querySelector('.elements').innerHTML;
+          expect(elementsHtml).to.eql('<catalog-listing data-index="0"></catalog-listing>');
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

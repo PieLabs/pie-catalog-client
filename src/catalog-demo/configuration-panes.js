@@ -67,7 +67,6 @@ export class ConfigurationPane extends HTMLElement {
       e.preventDefault();
       e.stopImmediatePropagation();
       let update = e.detail.update;
-      console.log('new model: ', this._model);
       this.dispatchEvent(new ConfigurationPaneUpdateEvent(id, name, update));
     })
   }

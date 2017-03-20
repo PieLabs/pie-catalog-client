@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../test-build/bundle.js"></script>
+</head>
+
+<body>
+  <github-avatar></github-avatar>
+  <script>
+    describe('<github-avatar>', () => {
+
+      let ga;
+      before(() => {
+        return elementsDefined
+          .then(() => customElements.whenDefined('github-avatar'))
+          .then(() => {
+            ga = document.querySelector('github-avatar');
+          })
+      });
+
+      describe('set user attribute', () => {
+        it('dispatches a load avatar event', () => {
+          let event = null;
+          let handler = (e) => {
+            event = e;
+          }
+
+          ga.addEventListener('load-avatar', handler);
+          ga.setAttribute('user', 'some-user');
+          console.log('event');
+          expect(event.user).to.eql('some-user');
+          expect(event.element).to.eql(ga);
+          ga.removeEventListener('load-avatar', handler);
+        });
+      });
+
+      describe('set url attribute', () => {
+        it('sets the <img src="">', () => {
+          ga.setAttribute('url', 'some-url');
+          expect(ga.shadowRoot.querySelector('img').getAttribute('src')).to.eql('some-url');
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

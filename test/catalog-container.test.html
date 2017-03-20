@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../test-build/bundle.js"></script>
+</head>
+
+<body>
+  <catalog-container>slot here</catalog-container>
+  <script>
+    describe('<catalog-container>', () => {
+
+
+      let cc;
+
+      before(() => {
+        return elementsDefined
+          .then(() => customElements.whenDefined('catalog-container'))
+          .then(() => {
+            cc = document.querySelector('catalog-container');
+          })
+      });
+
+      describe('isLoading', () => {
+        let pb;
+        beforeEach(() => {
+          pb = {
+            enable: sinon.stub(),
+            disable: sinon.stub()
+          }
+          cc._progressBar = pb;
+        });
+
+        it('isLoading(true) calls progressBar.enable', () => {
+          cc.isLoading(true);
+          sinon.assert.called(pb.enable);
+        });
+
+        it('isLoading(false) calls progressBar.disable', () => {
+          cc.isLoading(false);
+          sinon.assert.called(pb.disable);
+        });
+
+      });
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../test-build/bundle.js"></script>
+</head>
+
+<body>
+  <dependencies-panel></dependencies-panel>
+  <script>
+    describe('<dependencies-panel>', () => {
+
+
+      let dp;
+
+      before(() => {
+        return elementsDefined
+          .then(() => customElements.whenDefined('dependencies-panel'))
+          .then(() => {
+            dp = document.querySelector('dependencies-panel');
+          })
+      });
+
+      describe('set dependencies', () => {
+        let holder;
+        before(() => {
+          dp.dependencies = {
+            a: '1.0.0',
+            b: '2.0.0'
+          }
+          holder = dp.shadowRoot.querySelector('.holder');
+        });
+
+        it('creates 2 dependency-el nodes', () => {
+          expect(holder.children.length).to.eql(2);
+        });
+
+        it('sets the first dependency-el', () => {
+          expect(holder.children[0].outerHTML).to.eql(`<dependency-el name="a" semver="1.0.0"></dependency-el>`);
+        });
+
+        it('sets the second dependency-el', () => {
+          expect(holder.children[1].outerHTML).to.eql(`<dependency-el name="b" semver="2.0.0"></dependency-el>`);
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>
