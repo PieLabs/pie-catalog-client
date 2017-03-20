@@ -44,7 +44,6 @@ export default class ItemPreview extends HTMLElement {
     }
 
     this.addEventListener('pie.register', (e) => {
-      console.log('got a pie.register')
       let id = e.target.getAttribute('pie-id');
       this._registeredPies[id] = e.target;
       this._updatePies();
@@ -76,7 +75,6 @@ export default class ItemPreview extends HTMLElement {
   }
 
   set controllers(c) {
-    console.log('set controllers: ', c);
     this._controllers = c;
     this._updatePies();
   }
@@ -91,9 +89,11 @@ export default class ItemPreview extends HTMLElement {
   }
 
   _updatePies() {
+
     if (!this._config || !this._controllers) {
       return;
     }
+
 
     let promises = Object.keys(this._registeredPies).map(id => {
       let node = this._registeredPies[id];

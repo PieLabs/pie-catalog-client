@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../test-build/bundle.js"></script>
+</head>
+
+<body>
+  <pie-brand></pie-brand>
+  <script>
+    describe('<pie-brand>', function () {
+      before(() => {
+        return elementsDefined
+          .then(() => customElements.whenDefined('pie-brand'));
+      });
+
+      it('has default content', function () {
+        let pb = document.querySelector('pie-brand');
+        let slot = pb.shadowRoot.querySelector('slot');
+        expect(slot.innerHTML).to.eql('pie catalog');
+      });
+    });
+  </script>
+</body>
+
+</html>
