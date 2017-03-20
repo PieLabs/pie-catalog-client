@@ -26,14 +26,16 @@ export default class ConfigurationPanes extends HTMLElement {
 const paneTemplateHTML = `
  <style>
  .holder{
-   border: solid 1px rgba(0, 200, 100, 0.3);
-   padding: 5px 
+   border-bottom: solid 0px rgba(0, 200, 100, 0.3);
+   padding-top: 5px; 
+   padding-bottom: 5px;
  }
+
  .header{
-   background-color: rgba(0, 200, 100, 0.2);
-   padding: 5px;
+   padding: 0px;
    text-transform: uppercase;
    font-size: 13px;
+   font-weight:bold; 
    color: rgba(0, 100, 100, 0.8);
  }
 
