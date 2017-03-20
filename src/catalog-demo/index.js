@@ -18,6 +18,8 @@ const templateHTML = `
 
       demo-pane{
         flex: 1;
+        margin-left: 2px;
+        margin-right: 2px;
       }
       
     </style>
@@ -114,11 +116,6 @@ export default class CatalogDemo extends HTMLElement {
     this._$itemPreview.config = c;
 
     this._addConfigurationPanes();
-
-    customElements.whenDefined('control-panel')
-      .then(() => {
-        //this.$controlPanel.langs = this._config.langs;
-      });
 
     if (this._config.elementModels) {
       this._elementModels = new ElementModels(this, this._config.elementModels);

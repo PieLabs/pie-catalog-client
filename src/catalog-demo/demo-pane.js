@@ -7,12 +7,12 @@ const templateHTML = `
   }
   #title {
     text-transform: uppercase;
-    font-size: 11px;
+    font-size: 12px;
     color: grey;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 3px;
+    padding-bottom: 8px;
     border-bottom: solid 1px rgba(0,0,0,0.14);
-    margin-bottom: 5px;
+    margin-bottom: 0px;
   }
 </style>
 <div id="title"></div>

@@ -25,14 +25,19 @@ export default class ConfigurationPanes extends HTMLElement {
 
 const paneTemplateHTML = `
  <style>
+ :host{
+   padding: 0px;
+ }
+
  .holder{
    border-bottom: solid 0px rgba(0, 200, 100, 0.3);
-   padding-top: 5px; 
-   padding-bottom: 5px;
+   padding-top: 0px; 
+   padding-bottom: 0px;
  }
 
  .header{
-   padding: 0px;
+   padding-top: 10px;
+   padding-bottom: 8px;
    text-transform: uppercase;
    font-size: 13px;
    font-weight:bold; 

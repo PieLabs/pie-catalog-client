@@ -68,7 +68,7 @@ export default class ItemPreview extends HTMLElement {
 
     customElements.whenDefined('control-panel')
       .then(() => {
-        //this.$controlPanel.langs = this._config.langs;
+        this.$controlPanel.langs = this._config.langs;
       });
 
     this._updatePies();
