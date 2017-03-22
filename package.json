@@ -1,6 +1,6 @@
 {
   "name": "pie-catalog-client",
-  "version": "0.6.0-prerelease",
+  "version": "0.5.1-prerelease",
   "description": "The client code for the catalog",
   "scripts": {
     "test": "npm test"
