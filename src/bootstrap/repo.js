@@ -30,6 +30,8 @@ export const logic = require.ensure([], () => {
 
   const { default: CatalogDemo } = require('../catalog-demo');
   customElements.define('catalog-demo', CatalogDemo);
+  const { default: DemoPane } = require('../catalog-demo/demo-pane');
+  customElements.define('demo-pane', DemoPane);
   const { default: ControlPanel } = require('../catalog-demo/control-panel');
   customElements.define('control-panel', ControlPanel);
   const { default: ItemPreview } = require('../catalog-demo/item-preview');
