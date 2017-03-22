@@ -15,10 +15,22 @@ const templateHTML = `
       ::slotted(*) {
         padding-right: 10px;
       }
+
+      demo-pane{
+        flex: 1;
+        margin-left: 2px;
+        margin-right: 2px;
+      }
       
     </style>
-    <slot name="configure"></slot>
-    <item-preview><slot name="preview"></slot></item-preview>
+    <!-- 
+    Note: This is added programmatically... 
+    <demo-pane title="configuration">
+      <slot name="configure"></slot>
+    </demo-pane> -->
+    <demo-pane title="preview">
+      <item-preview><slot name="preview"></slot></item-preview>
+    </demo-pane>
 `;
 
 export default class CatalogDemo extends HTMLElement {
@@ -105,11 +117,6 @@ export default class CatalogDemo extends HTMLElement {
 
     this._addConfigurationPanes();
 
-    customElements.whenDefined('control-panel')
-      .then(() => {
-        //this.$controlPanel.langs = this._config.langs;
-      });
-
     if (this._config.elementModels) {
       this._elementModels = new ElementModels(this, this._config.elementModels);
     }
@@ -131,7 +138,15 @@ export default class CatalogDemo extends HTMLElement {
       </configuration-pane>`
     });
 
-    //add via the configure slot
+    //create demo pane for config panes and add to the shadow dom...
+    let demoPane = document.createElement('demo-pane');
+    demoPane.setAttribute('title', 'configuration');
+    let slot = document.createElement('slot');
+    slot.setAttribute('name', 'configure');
+    demoPane.appendChild(slot);
+    this.shadowRoot.insertBefore(demoPane, this.shadowRoot.firstChild);
+
+    //add the configure panes to the light dom inside a div pointing to the configure slot...
     let div = document.createElement('div');
     div.setAttribute('slot', 'configure');
     div.innerHTML = panes.join('\n');
