@@ -76,15 +76,19 @@ export default class CatalogDemo extends HTMLElement {
    * > Note: the markup must remain in the light dom to allow styling to take effect
    */
   set markup(m) {
+    this._markup = m;
+    this.render();
+  }
 
+  render() {
     let existing = this.querySelector('[slot="preview"]');
     if (existing) {
-      this.removeChild(existing)
+      this.removeChild(existing);
     }
 
     const div = document.createElement('div');
     div.setAttribute('slot', 'preview');
-    div.innerHTML = m;
+    div.innerHTML = this._markup;
     this.appendChild(div);
   }
 
@@ -161,14 +165,24 @@ export default class CatalogDemo extends HTMLElement {
     }
 
     this.addEventListener(ConfigurationPaneUpdateEvent.TYPE, (e) => {
-      let { id, element, update } = e.detail;
+      let { id, element, update, reset } = e.detail;
       let index = this._config.models.findIndex(m => m.id === id);
       update = merge(update, { id, element });
       this._config.models.splice(index, 1, update);
       this._$itemPreview.config = this._config;
+      if (reset) {
+        console.log('reset the session, rerender the item');
+        this.resetSession(id);
+        this.render();
+      }
     });
   }
 
+  resetSession(id) {
+    let session = {id: id};
+    this._sessions = this._sessions.filter(v => v.id !== id);
+    this._sessions.push(session);
+  }
 
   _getSessionById(id) {
     let session = this._sessions.find(v => v.id === id);
