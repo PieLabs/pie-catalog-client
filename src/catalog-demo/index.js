@@ -44,7 +44,6 @@ export default class CatalogDemo extends HTMLElement {
     this._$itemPreview = sr.querySelector('item-preview');
 
     this._registeredPies = {};
-    this._sessions = [];
     this._env = {
       mode: 'gather'
     }
@@ -117,7 +116,7 @@ export default class CatalogDemo extends HTMLElement {
    */
   set config(c) {
     this._config = c;
-    this._$itemPreview.config = c;
+    this._$itemPreview.setConfig(this._config);
 
     this._addConfigurationPanes();
 
@@ -169,27 +168,8 @@ export default class CatalogDemo extends HTMLElement {
       let index = this._config.models.findIndex(m => m.id === id);
       update = merge(update, { id, element });
       this._config.models.splice(index, 1, update);
-      this._$itemPreview.config = this._config;
-      if (reset) {
-        console.log('reset the session, rerender the item');
-        this.resetSession(id);
-        this.render();
-      }
+      this._$itemPreview.setConfig(this._config, reset);
     });
   }
 
-  resetSession(id) {
-    let session = {id: id};
-    this._sessions = this._sessions.filter(v => v.id !== id);
-    this._sessions.push(session);
-  }
-
-  _getSessionById(id) {
-    let session = this._sessions.find(v => v.id === id);
-    if (!session) {
-      session = { id: id };
-      this._sessions.push(session);
-    }
-    return session;
-  }
 }
