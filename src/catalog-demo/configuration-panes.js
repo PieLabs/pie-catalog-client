@@ -74,7 +74,8 @@ export class ConfigurationPane extends HTMLElement {
       e.preventDefault();
       e.stopImmediatePropagation();
       let update = e.detail.update;
-      this.dispatchEvent(new ConfigurationPaneUpdateEvent(id, name, update));
+      let reset = e.detail.reset || false;
+      this.dispatchEvent(new ConfigurationPaneUpdateEvent(id, name, update, reset));
     })
   }
 
@@ -87,11 +88,11 @@ export class ConfigurationPane extends HTMLElement {
 }
 
 export class ConfigurationPaneUpdateEvent extends CustomEvent {
-  constructor(id, element, update) {
+  constructor(id, element, update, reset) {
     super(ConfigurationPaneUpdateEvent.TYPE, {
       bubbles: true,
       detail: {
-        id, element, update
+        id, element, update, reset
       }
     });
   }
