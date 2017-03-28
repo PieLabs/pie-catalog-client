@@ -53,7 +53,8 @@
           configStub = sinon.stub();
 
           cd._$itemPreview = {}
-          Object.defineProperty(cd._$itemPreview, 'config', { set: configStub });
+
+          cd._$itemPreview.setConfig = configStub;
 
           cd.config = {
             models: [
