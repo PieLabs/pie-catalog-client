@@ -63,7 +63,13 @@ export default class ItemPreview extends HTMLElement {
     });
   }
 
-  set config(c) {
+
+  /**
+   * @param {*} c  the config
+   * @param {*} resetSession  reset the session also 
+   */
+  setConfig(c, resetSession) {
+
     this._config = c;
 
     customElements.whenDefined('control-panel')
@@ -71,7 +77,7 @@ export default class ItemPreview extends HTMLElement {
         this.$controlPanel.langs = this._config.langs;
       });
 
-    this._updatePies();
+    this._updatePies(resetSession);
   }
 
   set controllers(c) {
@@ -88,12 +94,15 @@ export default class ItemPreview extends HTMLElement {
     return session;
   }
 
-  _updatePies() {
+  _updatePies(resetSession) {
 
     if (!this._config || !this._controllers) {
       return;
     }
 
+    if (resetSession === true) {
+      this._sessions = [];
+    }
 
     let promises = Object.keys(this._registeredPies).map(id => {
       let node = this._registeredPies[id];

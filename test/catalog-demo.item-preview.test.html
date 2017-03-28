@@ -41,18 +41,24 @@
           .then(() => customElements.whenDefined('dummy-pie'))
           .then(() => {
             ip = document.querySelector('item-preview');
-            ip.config = {
-              models: [
-                { id: '1', element: 'dummy-pie' }
-              ]
-            }
-            ip.controllers = controllers;
-
-            ip.innerHTML = `<dummy-pie pie-id="1"></dummy-pie>`;
           });
+
       });
 
-      describe('set config', () => {
+      describe('setConfig', () => {
+
+        before(() => {
+          ip.setConfig({
+            models: [
+              { id: '1', element: 'dummy-pie' }
+            ]
+          });
+          ip.controllers = controllers;
+
+          ip.innerHTML = `<dummy-pie pie-id="1"></dummy-pie>`;
+
+          return customElements.whenDefined('dummy-pie');
+        });
 
         it('calls controllers[pie-tag-name].model', () => {
           sinon.assert.calledWith(controllers['dummy-pie'].model, { id: '1', element: 'dummy-pie' });
@@ -63,6 +69,30 @@
         });
 
         it('sets the session on the pie element', () => {
+          expect(ip.querySelector('dummy-pie').session).to.eql({ id: '1' });
+        });
+      });
+
+      describe('setConfig with reset', () => {
+        let config;
+        before(() => {
+          return customElements.whenDefined('dummy-pie')
+            .then(() => {
+              config = {
+                models: [
+                  { id: '1', element: 'dummy-pie' }
+                ]
+              };
+              ip.innerHTML = `<dummy-pie pie-id="1"></dummy-pie>`;
+              ip.controllers = controllers;
+              ip.querySelector('dummy-pie').session = { answer: 'this is an answer' };
+              console.log('ip.innerHTML', ip.innerHTML);
+              console.log('session: ', ip.querySelector('dummy-pie').session);
+              ip.setConfig(config, true);
+            });
+        });
+
+        it('clears the session on the pie element', () => {
           expect(ip.querySelector('dummy-pie').session).to.eql({ id: '1' });
         });
       });
