@@ -44,7 +44,10 @@
         });
 
         it('sets dummy-pane.model', () => {
-          sinon.assert.calledWith(dummyPane._setModel, { dummy: true });
+          return customElements.whenDefined('dummy-pane')
+            .then(() => {
+              sinon.assert.calledWith(dummyPane._setModel, { dummy: true });
+            });
         });
       });
 
