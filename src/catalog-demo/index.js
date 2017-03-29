@@ -155,13 +155,17 @@ export default class CatalogDemo extends HTMLElement {
     div.innerHTML = panes.join('\n');
     this.appendChild(div);
 
-    let paneList = this.querySelectorAll('configuration-pane');
+    customElements.whenDefined('configuration-pane')
+      .then(() => {
+        let paneList = this.querySelectorAll('configuration-pane');
 
-    for (var i = 0; i < paneList.length; i++) {
-      let p = paneList[i];
-      let m = this._config.models.find(m => m.id === p.getAttribute('element-id'));
-      p.model = m;
-    }
+        for (var i = 0; i < paneList.length; i++) {
+          let p = paneList[i];
+          let m = this._config.models.find(m => m.id === p.getAttribute('element-id'));
+          p.model = m;
+        }
+
+      });
 
     this.addEventListener(ConfigurationPaneUpdateEvent.TYPE, (e) => {
       let { id, element, update, reset } = e.detail;

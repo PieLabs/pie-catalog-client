@@ -83,7 +83,14 @@ export class ConfigurationPane extends HTMLElement {
     this._model = cloneDeep(m);
     delete this._model.id;
     delete this._model.element;
-    this.children[0].model = this._model;
+    const pane = this.children[0];
+    const tagName = pane.tagName.toLowerCase();
+
+    customElements.whenDefined(tagName)
+      .then(() => {
+        const el = this.children[0];
+        el.model = this._model;
+      });
   }
 }
 
