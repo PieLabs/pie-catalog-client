@@ -71,7 +71,7 @@ export default class ItemPreview extends HTMLElement {
         this.$controlPanel.langs = this._config.langs;
       });
 
-    this._updatePies(resetSession);
+    return this._updatePies(resetSession);
   }
 
   set controllers(c) {
@@ -146,7 +146,7 @@ export default class ItemPreview extends HTMLElement {
       });
     }
 
-    Promise.all(elements.map(e => customElements.whenDefined(e)))
+    return Promise.all(elements.map(e => customElements.whenDefined(e)))
       .then(() => this._registerPiesIfNeeded())
       .then(() => Promise.all(callControllerModel()))
       .then(results => {
