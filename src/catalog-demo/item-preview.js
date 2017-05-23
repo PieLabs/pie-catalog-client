@@ -42,12 +42,6 @@ export default class ItemPreview extends HTMLElement {
     this._env = {
       mode: 'gather'
     }
-
-    this.addEventListener('pie.register', (e) => {
-      let id = e.target.getAttribute('pie-id');
-      this._registeredPies[id] = e.target;
-      this._updatePies();
-    });
   }
 
   connectedCallback() {
@@ -94,6 +88,41 @@ export default class ItemPreview extends HTMLElement {
     return session;
   }
 
+  _registerPiesIfNeeded() {
+    //TODO: could be a bit more thorough here..
+    if (this._config.models.length === Object.keys(this._registeredPies).length) {
+      return Promise.resolve();
+    } else {
+      return new Promise((resolve, reject) => {
+        this._config.models.forEach(m => {
+          const assignedNodes = this.shadowRoot.querySelector('slot').assignedNodes({ flatten: true });
+          const el = assignedNodes.reduce((acc, node) => {
+            if (acc) {
+              return acc;
+            } else {
+              if (node.tagName.toLowerCase() === m.element && node.getAttribute('pie-id') === m.id) {
+                return node;
+              } else {
+                const selector = `${m.element}[pie-id="${m.id}"]`;
+                return node.querySelector(selector);
+              }
+            }
+          }, null);
+
+          if (!el) {
+            reject(new Error(`can't find element by ${m.element}, ${m.id}`));
+          }
+          this._registeredPies[m.id] = el;
+          el.addEventListener('session-changed', e => {
+            //TODO: update the status on session-changed..
+            console.log('session-changed: ', e.detail);
+          })
+        });
+        resolve();
+      });
+    }
+  }
+
   _updatePies(resetSession) {
 
     if (!this._config || !this._controllers) {
@@ -104,16 +133,22 @@ export default class ItemPreview extends HTMLElement {
       this._sessions = [];
     }
 
-    let promises = Object.keys(this._registeredPies).map(id => {
-      let node = this._registeredPies[id];
-      let model = this._config.models.find(v => v.id === id);
-      let session = this._getSessionById(id)
-      let controller = this._controllers[node.nodeName.toLowerCase()];
-      return controller.model(model, session, this._env)
-        .then(m => ({ id: id, model: m, session: session }));
-    });
+    const elements = this._config.models.map(m => m.element);
 
-    Promise.all(promises)
+    const callControllerModel = () => {
+      return Object.keys(this._registeredPies).map(id => {
+        let node = this._registeredPies[id];
+        let model = this._config.models.find(v => v.id === id);
+        let session = this._getSessionById(id)
+        let controller = this._controllers[node.nodeName.toLowerCase()];
+        return controller.model(model, session, this._env)
+          .then(m => ({ id: id, model: m, session: session }));
+      });
+    }
+
+    Promise.all(elements.map(e => customElements.whenDefined(e)))
+      .then(() => this._registerPiesIfNeeded())
+      .then(() => Promise.all(callControllerModel()))
       .then(results => {
         results.forEach(({ id, model, session }) => {
           const node = this._registeredPies[id];
