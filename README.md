@@ -61,4 +61,11 @@ cd pie-catalog-client
 npm test
 ```
 
-Once it's released we can just add it to the `devDependencies`, and update the npm test cmd.
+Once it's released we can just add it to the `devDependencies`, and update the npm test cmd.  
+
+
+# Release
+
+```bash 
+npm run release
+```
