@@ -2,7 +2,10 @@ import { applyStyle, boxShadow, prepareTemplate } from '../styles';
 
 import { ConfigurationPaneUpdateEvent } from './configuration-panes';
 import ElementModels from './element-models';
+import debug from 'debug';
 import merge from 'lodash/merge';
+
+const log = debug('pie-catalog-client:catalog-demo');
 
 const templateHTML = `
     <style>
@@ -166,6 +169,12 @@ export default class CatalogDemo extends HTMLElement {
         }
 
       });
+
+    //Add insert.image event handler, that'll just use a data ure
+
+    this.addEventListener('insert.image', e => {
+      log('insert.image event received..');
+    });
 
     this.addEventListener(ConfigurationPaneUpdateEvent.TYPE, (e) => {
       let { id, element, update, reset } = e.detail;
