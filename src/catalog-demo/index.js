@@ -4,6 +4,7 @@ import { ConfigurationPaneUpdateEvent } from './configuration-panes';
 import ElementModels from './element-models';
 import debug from 'debug';
 import merge from 'lodash/merge';
+import range from 'lodash/range';
 
 const log = debug('pie-catalog-client:catalog-demo');
 
@@ -26,6 +27,7 @@ const templateHTML = `
       }
       
     </style>
+    <input type="file" hidden></input>
     <!-- 
     Note: This is added programmatically... 
     <demo-pane title="configuration">
@@ -50,6 +52,45 @@ export default class CatalogDemo extends HTMLElement {
     this._env = {
       mode: 'gather'
     }
+
+    this.handleFileSelect = this.handleFileSelect.bind(this);
+
+    this._$fileInput = sr.querySelector('input[type="file"]');
+  }
+
+  connectedCallback() {
+    this._$fileInput.addEventListener('change', this.handleFileSelect);
+  }
+
+  disconnectedCallback() {
+    this._$fileInput.removeEventListener('change', this.handleFileSelect);
+  }
+
+  handleFileSelect(e) {
+    const file = event.target.files[0];
+    this._insertImageHandler.fileChosen(file);
+    this._$fileInput.value = '';
+    var reader = new FileReader();
+    reader.onload = () => {
+      const dataURL = reader.result;
+      /** simulate a delay in uploading */
+      setTimeout(() => {
+        this._insertImageHandler.done(null, dataURL);
+        this._insertImageHandler = null;
+      }, 2000);
+    };
+
+    let progress = 0;
+    this._insertImageHandler.progress(progress);
+
+    range(1, 100).forEach(n => {
+      setTimeout(() => {
+        this._insertImageHandler.progress(n);
+      }, n * 20);
+    });
+
+    log('[handleFileSelect] reader.readAsDataUrl, file:', file);
+    reader.readAsDataURL(file);
   }
 
   /**
@@ -174,6 +215,14 @@ export default class CatalogDemo extends HTMLElement {
 
     this.addEventListener('insert.image', e => {
       log('insert.image event received..');
+      this._insertImageHandler = e.detail.handler;
+      this._$fileInput.click();
+    });
+
+    this.addEventListener('delete.image', e => {
+      log('delete.image event received..', e.detail.src);
+      this._deleteImageHandler = e.detail.done;
+      e.detail.done(null);
     });
 
     this.addEventListener(ConfigurationPaneUpdateEvent.TYPE, (e) => {
@@ -184,5 +233,4 @@ export default class CatalogDemo extends HTMLElement {
       this._$itemPreview.setConfig(this._config, reset);
     });
   }
-
 }
