@@ -215,14 +215,17 @@ export default class CatalogDemo extends HTMLElement {
 
     this.addEventListener('insert.image', e => {
       log('insert.image event received..');
-      this._insertImageHandler = e.detail.handler;
+      this._insertImageHandler = e.detail;
       this._$fileInput.click();
     });
 
     this.addEventListener('delete.image', e => {
-      log('delete.image event received..', e.detail.src);
-      this._deleteImageHandler = e.detail.done;
-      e.detail.done(null);
+      const { done, src } = e.detail;
+      log('delete.image event received..', src);
+      log('simulate delete async task');
+      setTimeout(() => {
+        done(null);
+      }, 2000)
     });
 
     this.addEventListener(ConfigurationPaneUpdateEvent.TYPE, (e) => {
