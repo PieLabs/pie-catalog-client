@@ -152,8 +152,8 @@ export default class ItemPreview extends HTMLElement {
       .then(results => {
         results.forEach(({ id, model, session }) => {
           const node = this._registeredPies[id];
-          node.session = session;
           node.model = model;
+          node.session = session;
         });
       });
   }
