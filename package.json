@@ -10,6 +10,7 @@
   "author": "corespring",
   "license": "ISC",
   "dependencies": {
+    "@pie-libs/pie-configure-events": "^1.1.0",
     "@webcomponents/shadycss": "github:webcomponents/shadycss#69704abae0214e3a6516d10ddad44aca878b1c71",
     "highlight.js": "^9.9.0",
     "less": "^2.7.2",
