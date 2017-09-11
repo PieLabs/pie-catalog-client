@@ -1,3 +1,4 @@
+import { DeleteImageEvent, InsertImageEvent } from '@pie-libs/pie-configure-events';
 import { applyStyle, boxShadow, prepareTemplate } from '../styles';
 
 import { ConfigurationPaneUpdateEvent } from './configuration-panes';
@@ -213,13 +214,13 @@ export default class CatalogDemo extends HTMLElement {
 
     //Add insert.image event handler, that'll just use a data ure
 
-    this.addEventListener('insert.image', e => {
+    this.addEventListener(InsertImageEvent.TYPE, e => {
       log('insert.image event received..');
       this._insertImageHandler = e.detail;
       this._$fileInput.click();
     });
 
-    this.addEventListener('delete.image', e => {
+    this.addEventListener(DeleteImageEvent.TYPE, e => {
       const { done, src } = e.detail;
       log('delete.image event received..', src);
       log('simulate delete async task');

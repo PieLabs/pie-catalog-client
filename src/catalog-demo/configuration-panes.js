@@ -1,5 +1,6 @@
 import { applyStyle, boxShadow, prepareTemplate } from '../styles';
 
+import { ModelUpdatedEvent } from '@pie-libs/pie-configure-events';
 import cloneDeep from 'lodash/cloneDeep';
 
 const templateHTML = `
@@ -70,7 +71,7 @@ export class ConfigurationPane extends HTMLElement {
     const name = this.getAttribute('element-name');
     this.shadowRoot.querySelector('.header').textContent = `${id}: ${name}`;
 
-    this.addEventListener('model.updated', e => {
+    this.addEventListener(ModelUpdatedEvent.TYPE, e => {
       e.preventDefault();
       e.stopImmediatePropagation();
       let update = e.detail.update;
