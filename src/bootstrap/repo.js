@@ -41,10 +41,6 @@ export const logic = require.ensure([], () => {
   customElements.define('configuration-pane', ConfigurationPane);
   customElements.define('json-configuration', JsonConfiguration);
 
-  //not ready yet...
-  // const RelativeTime = require('time-elements/src/relative-time');
-  // customEements.define('relative-time', RelativeTime);
-
 })
   .then(() => {
     console.log('logic loaded');
