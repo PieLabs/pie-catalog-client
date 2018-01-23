@@ -1,6 +1,6 @@
 import ElementModels from '../src/catalog-demo/element-models';
-import { elementsDefined } from '../src/bootstrap/repo';
-window.elementsDefined = elementsDefined;
+import { defineRepoElements } from '../src/bootstrap/repo';
+window.elementsDefined = defineRepoElements();
 
 
 window.ElementModels = ElementModels;

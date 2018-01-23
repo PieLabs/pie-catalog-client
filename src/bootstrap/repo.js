@@ -1,8 +1,4 @@
-import { VIEW_ORG } from '../events';
-import common from '../common';
-
-//Common will resolve first
-export { common };
+import { defineCommonElements } from './common';
 
 //logic next 
 export const logic = require.ensure([], () => {
@@ -51,5 +47,10 @@ let repoElements = [
   'catalog-demo'
 ];
 
+
 //This will happen at the end
-export const elementsDefined = Promise.all(repoElements.map(e => customElements.whenDefined(e)));
+export const defineRepoElements = () => {
+  const elementPromises = repoElements.map(e => customElements.whenDefined(e));
+  const promises = [defineCommonElements()].concat(elementPromises);
+  return Promise.all(promises);
+}

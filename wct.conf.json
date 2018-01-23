@@ -1,10 +1,23 @@
 {
   "verbose": true,
+  "browsersOptions": {
+    "chrome": [
+      "start-maximized",
+      "disable-gpu",
+      "no-sandbox"
+    ]
+  },
   "plugins": {
     "local": {
       "browsers": [
         "chrome"
-      ]
+      ],
+      "browserOptions": {
+        "chrome": [
+          "disable-gpu",
+          "no-sandbox"
+        ]
+      }
     }
   }
 }

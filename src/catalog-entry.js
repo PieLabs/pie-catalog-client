@@ -1,5 +1,3 @@
-import * as events from './events';
-
 import { applyStyle, boxShadow, prepareTemplate } from './styles';
 
 const templateHTML = `
@@ -38,20 +36,6 @@ const templateHTML = `
         padding-left: 5px;
       }
 
-      #org {
-        padding-left: 15px;
-        font-size: 14px;
-        line-height: 36px;
-        cursor: pointer;
-        transition: color ease-in 100ms;
-        color: rgba(0,0,0,0.8);
-        color: rgba(0,0,0,0.8);      
-      }
-
-      #org:hover{
-        color: rgba(0,0,0,0.5);
-      }
-
       github-avatar{
         padding-left: 5px;
       }
@@ -59,9 +43,8 @@ const templateHTML = `
     </style>
    <div>
      <div class="header">
-       <div id="repo"></div>
+       <div id="name"></div>
        <div id="version"></div>
-       <div id="org"></div>
        <github-avatar size="30"></github-avatar>
      </div>
      <c-tabs>
@@ -105,14 +88,10 @@ export default class CatalogEntry extends HTMLElement {
     }
     let e = this._element;
 
-    this.shadowRoot.querySelector('#repo').textContent = e.repo;
+    this.shadowRoot.querySelector('#name').textContent = e.name;
     this.shadowRoot.querySelector('#version').textContent = e.tag;
-    this.shadowRoot.querySelector('#org').textContent = e.org;
-    this.shadowRoot.querySelector('github-avatar').setAttribute('user', e.org);
+    this.shadowRoot.querySelector('github-avatar').setAttribute('user', e.name);
 
-    this.shadowRoot.querySelector('#org').addEventListener('click', (e) => {
-      this.dispatchEvent(events.viewOrg(this._element));
-    });
 
     customElements.whenDefined('info-panel')
       .then(() => {

@@ -55,7 +55,7 @@ const templateHTML = `
         font-size: 16px;
       }
 
-      #repo{
+      #name{
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
@@ -70,7 +70,7 @@ const templateHTML = `
 
     </style>
 
-    <h4 id="repo"></h4>
+    <h4 id="name"></h4>
     <div id="tag"></div>
     <span id="description"></span>
     <hr/>
@@ -90,7 +90,7 @@ export default class CatalogListing extends HTMLElement {
     let sr = applyStyle(this, template);
 
     this._$org = sr.querySelector('#org');
-    this._$repo = sr.querySelector('#repo');
+    this._$name = sr.querySelector('#name');
     this._$tag = sr.querySelector('#tag');
     this._$description = sr.querySelector('#description');
     this._$avatar = sr.querySelector('github-avatar');
@@ -100,7 +100,7 @@ export default class CatalogListing extends HTMLElement {
     this._element = e;
     let qs = this.shadowRoot.querySelector;
     this._$org.textContent = e.org;
-    this._$repo.textContent = e.repo;
+    this._$name.textContent = e.name;
     this._$tag.textContent = e.tag;
     this._$description.textContent = e.description;
     this._$avatar.setAttribute('user', e.org);
@@ -112,19 +112,13 @@ export default class CatalogListing extends HTMLElement {
 
   connectedCallback() {
 
-    let onRepoClick = (e) => {
+    const onElementClick = (e) => {
       e.preventDefault();
-      this.dispatchEvent(events.viewRepo(this._element));
+      this.dispatchEvent(events.elementClick(this._element));
     };
 
-    let onOrgClick = (e) => {
-      e.preventDefault();
-      this.dispatchEvent(events.viewOrg(this._element));
-    };
-
-    this._$repo.addEventListener('click', onRepoClick);
-    this._$description.addEventListener('click', onRepoClick);
-    this._$org.addEventListener('click', onOrgClick);
+    this._$name.addEventListener('click', onElementClick);
+    this._$description.addEventListener('click', onElementClick);
   }
 
 }

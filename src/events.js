@@ -1,23 +1,11 @@
 
-export const VIEW_ORG = 'view-org';
-export const VIEW_REPO = 'view-repo';
+export const ELEMENT_CLICK = 'on-element-click';
 
-export function viewRepo(element) {
-  return new CustomEvent(VIEW_REPO, {
+export function elementClick(element) {
+  return new CustomEvent(ELEMENT_CLICK, {
     bubbles: true,
     composed: true,
-    detail: {
-      element: element
-    }
+    detail: { element }
   });
 }
 
-export function viewOrg(element) {
-  return new CustomEvent(VIEW_ORG, {
-    bubbles: true,
-    composed: true,
-    detail: {
-      element: element
-    }
-  });
-}
