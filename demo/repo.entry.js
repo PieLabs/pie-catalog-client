@@ -1,12 +1,12 @@
 import DemoElement, { Config, model, outcome } from './demo-element';
 
-import { elementsDefined } from '../src/bootstrap/repo';
+import { defineRepoElements, events } from '../src';
 
 customElements.define('demo-element', DemoElement);
 customElements.define('demo-element-configuration', Config);
 
 let init = () => {
-  elementsDefined
+  defineRepoElements()
     .then(() => {
       let entry = document.querySelector('catalog-entry');
       if (entry) {
@@ -55,6 +55,10 @@ let init = () => {
       demo.controllers = {
         'demo-element': { model, outcome }
       }
+
+      demo.session = [
+        { id: '1', value: 'b' }
+      ]
 
       let container = document.querySelector('catalog-container');
       container.isLoading(false);

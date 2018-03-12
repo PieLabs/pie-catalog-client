@@ -170,6 +170,18 @@ export default class CatalogDemo extends HTMLElement {
     }
   }
 
+
+  /**
+   * Set the pie item session: 
+   * ```javascript
+   * [   { id:string, ...}, ...  ]
+   * ```
+   */
+  set session(s) {
+    this._session = s;
+    this._$itemPreview.setSession(this._session);
+  }
+
   _addConfigurationPanes() {
 
     if (!this._configureMap || !this._config || !this._config.models) {

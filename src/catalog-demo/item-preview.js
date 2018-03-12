@@ -38,7 +38,7 @@ export default class ItemPreview extends HTMLElement {
 
     let sr = applyStyle(this, template);
     this._registeredPies = {};
-    this._sessions = [];
+    this._session = [];
     this._env = {
       mode: 'gather'
     }
@@ -74,16 +74,21 @@ export default class ItemPreview extends HTMLElement {
     return this._updatePies(resetSession);
   }
 
+  setSession(s) {
+    this._session = s;
+    return this._updatePies(this._session);
+  }
+
   set controllers(c) {
     this._controllers = c;
     this._updatePies();
   }
 
   _getSessionById(id) {
-    let session = this._sessions.find(v => v.id === id);
+    let session = this._session.find(v => v.id === id);
     if (!session) {
       session = { id: id };
-      this._sessions.push(session);
+      this._session.push(session);
     }
     return session;
   }
@@ -130,7 +135,7 @@ export default class ItemPreview extends HTMLElement {
     }
 
     if (resetSession === true) {
-      this._sessions = [];
+      this._session = [];
     }
 
     const elements = this._config.models.map(m => m.element);

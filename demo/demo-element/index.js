@@ -50,6 +50,7 @@ export default class DemoElement extends HTMLElement {
   set session(s) {
     console.log('session: ', s);
     this._session = s;
+    this._$input.value = this._session.value;
   }
 }
 
