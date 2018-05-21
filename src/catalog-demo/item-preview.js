@@ -1,4 +1,7 @@
 import { applyStyle, boxShadow, prepareTemplate } from '../styles';
+import debug from 'debug';
+
+const log = debug('pie-catalog-client:item-preview');
 
 const templateHTML = `
     <style>
@@ -8,13 +11,14 @@ const templateHTML = `
       }
 
       control-panel{
-        display: block;
+        display: flex;
         padding-bottom: 10px;
       }
       
+        /*${boxShadow}*/
       .pie-panel{
-        border-radius: 10px;
-        ${boxShadow}
+        border-radius: 0px;
+        border: solid 1px white; 
         padding: 10px;
         margin-top: 20px;
       }
@@ -24,52 +28,47 @@ const templateHTML = `
     <div class="pie-panel">
       <slot></slot> 
     </div>
+    <outcome-info></outcome-info>
 `;
-
 
 const template = prepareTemplate(templateHTML, 'item-preview');
 /**
- * Note: 
+ * Note:
  */
 export default class ItemPreview extends HTMLElement {
   constructor() {
     super();
-
 
     let sr = applyStyle(this, template);
     this._registeredPies = {};
     this._session = [];
     this._env = {
       mode: 'gather'
-    }
+    };
   }
 
   connectedCallback() {
     this.$controlPanel = this.shadowRoot.querySelector('control-panel');
-
-    customElements.whenDefined('control-panel')
-      .then(() => {
-        this.$controlPanel.env = this._env;
-      });
+    customElements.whenDefined('control-panel').then(() => {
+      this.$controlPanel.env = this._env;
+    });
 
     this.$controlPanel.addEventListener('env-changed', e => {
       this._updatePies();
     });
+    this.$outcomeInfo = this.shadowRoot.querySelector('outcome-info');
   }
-
 
   /**
    * @param {*} c  the config
-   * @param {*} resetSession  reset the session also 
+   * @param {*} resetSession  reset the session also
    */
   setConfig(c, resetSession) {
-
     this._config = c;
 
-    customElements.whenDefined('control-panel')
-      .then(() => {
-        this.$controlPanel.langs = this._config.langs;
-      });
+    customElements.whenDefined('control-panel').then(() => {
+      this.$controlPanel.langs = this._config.langs;
+    });
 
     return this._updatePies(resetSession);
   }
@@ -95,17 +94,24 @@ export default class ItemPreview extends HTMLElement {
 
   _registerPiesIfNeeded() {
     //TODO: could be a bit more thorough here..
-    if (this._config.models.length === Object.keys(this._registeredPies).length) {
+    if (
+      this._config.models.length === Object.keys(this._registeredPies).length
+    ) {
       return Promise.resolve();
     } else {
       return new Promise((resolve, reject) => {
         this._config.models.forEach(m => {
-          const assignedNodes = this.shadowRoot.querySelector('slot').assignedNodes({ flatten: true });
+          const assignedNodes = this.shadowRoot
+            .querySelector('slot')
+            .assignedNodes({ flatten: true });
           const el = assignedNodes.reduce((acc, node) => {
             if (acc) {
               return acc;
             } else {
-              if (node.tagName.toLowerCase() === m.element && node.getAttribute('pie-id') === m.id) {
+              if (
+                node.tagName.toLowerCase() === m.element &&
+                node.getAttribute('pie-id') === m.id
+              ) {
                 return node;
               } else {
                 const selector = `${m.element}[pie-id="${m.id}"]`;
@@ -121,14 +127,24 @@ export default class ItemPreview extends HTMLElement {
           el.addEventListener('session-changed', e => {
             //TODO: update the status on session-changed..
             console.log('session-changed: ', e.detail);
-          })
+          });
         });
         resolve();
       });
     }
   }
 
+  clearOutcomes() {
+    this.$outcomeInfo.clear();
+  }
+  clearOutcomes() {
+    this.$outcomeInfo.show(outcomes);
+  }
+
   _updatePies(resetSession) {
+    log('[_updatePies] reset: ', resetSession);
+
+    this.$outcomeInfo.outcomes = [];
 
     if (!this._config || !this._controllers) {
       return;
@@ -140,21 +156,57 @@ export default class ItemPreview extends HTMLElement {
 
     const elements = this._config.models.map(m => m.element);
 
-    const callControllerModel = () => {
+    const callControllerFn = (fn, handler) => {
       return Object.keys(this._registeredPies).map(id => {
         let node = this._registeredPies[id];
         let model = this._config.models.find(v => v.id === id);
-        let session = this._getSessionById(id)
+        let session = this._getSessionById(id);
         let controller = this._controllers[node.nodeName.toLowerCase()];
-        return controller.model(model, session, this._env)
-          .then(m => ({ id: id, model: m, session: session }));
+        if (controller && controller[fn]) {
+          return controller[fn](model, session, this._env).then(m =>
+            handler(id, m, session)
+          );
+        } else {
+          return Promise.resolve(
+            handler(
+              id,
+              { empty: true, info: 'no outcomes method found' },
+              session
+            )
+          );
+        }
       });
-    }
+    };
+
+    const callControllerModel = () =>
+      callControllerFn('model', (id, model, session) => ({
+        id,
+        model,
+        session
+      }));
+
+    const callOutcomes = () => {
+      if (this._env.mode !== 'evaluate') {
+        return [];
+      } else {
+        log('[callOutcomes] => get outcome!');
+
+        return callControllerFn('outcome', (id, outcome, session) => {
+          return { id, outcome, session };
+        });
+      }
+    };
 
     return Promise.all(elements.map(e => customElements.whenDefined(e)))
       .then(() => this._registerPiesIfNeeded())
-      .then(() => Promise.all(callControllerModel()))
-      .then(results => {
+      .then(async () => {
+        const results = await Promise.all(callControllerModel());
+        const outcomes = await Promise.all(callOutcomes());
+        return { results, outcomes };
+      })
+      .then(({ results, outcomes }) => {
+        log('outcomes:', outcomes);
+        this.$outcomeInfo.outcomes = outcomes;
         results.forEach(({ id, model, session }) => {
           const node = this._registeredPies[id];
           node.model = model;
@@ -162,5 +214,4 @@ export default class ItemPreview extends HTMLElement {
         });
       });
   }
-
 }

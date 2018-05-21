@@ -13,7 +13,7 @@ export default class DemoElement extends HTMLElement {
     this._$prompt = this.querySelector('#prompt');
     this._$input = this.querySelector('input');
 
-    this._$input.addEventListener('input', (e) => {
+    this._$input.addEventListener('input', e => {
       this._session.answer = e.target.value;
     });
 
@@ -34,16 +34,15 @@ export default class DemoElement extends HTMLElement {
     if (m.correctResponse) {
       this._$feedback.textContent = m.correctResponse;
     } else {
-
       this._$feedback.textContent = '';
     }
 
     if (m.correct === true) {
-      this._$feedback.setAttribute('style', "color: green;");
+      this._$feedback.setAttribute('style', 'color: green;');
     } else if (m.correct === false) {
-      this._$feedback.setAttribute('style', "color: red;");
+      this._$feedback.setAttribute('style', 'color: red;');
     } else {
-      this._$feedback.setAttribute('style', "color: auto");
+      this._$feedback.setAttribute('style', 'color: auto');
     }
   }
 
@@ -67,13 +66,14 @@ export class Config extends HTMLElement {
 
       let detail = {
         update: this._model
-      }
+      };
 
-      this.dispatchEvent(new CustomEvent('model.updated', { bubbles: true, detail }))
+      this.dispatchEvent(
+        new CustomEvent('model.updated', { bubbles: true, detail })
+      );
     });
     return input;
   }
-
 
   connectedCallback() {
     this.innerHTML = ` 
@@ -87,15 +87,15 @@ export class Config extends HTMLElement {
     </div>
     `;
 
-    this._$prompt = this._initInput('prompt', (v) => {
+    this._$prompt = this._initInput('prompt', v => {
       this._model.prompt = v;
     });
 
-    this._$placeholder = this._initInput('placeholder', (v) => {
+    this._$placeholder = this._initInput('placeholder', v => {
       this._model.placeholder = v;
     });
 
-    this._$correctResponse = this._initInput('correctResponse', (v) => {
+    this._$correctResponse = this._initInput('correctResponse', v => {
       this._model.correctResponse = v;
     });
   }
@@ -108,20 +108,24 @@ export class Config extends HTMLElement {
 }
 
 export function model(question, session, env) {
-
   let evaluateMode = env.mode === 'evaluate';
 
-  let out = _.extend({}, {
-    prompt: question.prompt,
-    placeholder: question.placeholder,
-    correct: evaluateMode && session.answer === question.correctResponse,
-    disabled: env.mode !== 'gather',
-    mode: env.mode,
-    correctResponse: evaluateMode && question.correctResponse
-  });
+  let out = _.extend(
+    {},
+    {
+      prompt: question.prompt,
+      placeholder: question.placeholder,
+      correct: evaluateMode && session.answer === question.correctResponse,
+      disabled: env.mode !== 'gather',
+      mode: env.mode,
+      correctResponse: evaluateMode && question.correctResponse
+    }
+  );
   return Promise.resolve(out);
 }
 
 export function outcome(question, session, env) {
-  return Promise.resolve({ score: { scaled: {} } });
+  return new Promise(resolve => {
+    resolve({ score: 1.0 });
+  });
 }

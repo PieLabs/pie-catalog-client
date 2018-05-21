@@ -6,10 +6,10 @@ const templateHTML = `
       padding-bottom: 6px;
       --select-field-font-family: 'Droid Sans', sans-serif;
       --select-option-selected-color: var(--pie-brand-hover-color);
-      margin-bottom: 10px;
-      ${boxShadow}
-      padding: 18px;
-      background-color: #f3f3f3;
+      margin-bottom: 0px;
+      padding-top: 8px;
+      padding-bottom: 8px;
+      background-color:  var(--catalog-header-bg, rgba(0, 50, 49, 0.9));
     }
 
     #control-panel{
@@ -19,8 +19,6 @@ const templateHTML = `
     }
 
     </style>
-
-    <span id="control-panel">control panel</span>
 
     <select-field id="mode" placeholder="mode">
       <select-option value="gather" selected>gather</select-option>
@@ -56,9 +54,13 @@ export default class ControlPanel extends HTMLElement {
   }
 
   _addLangsSelectField() {
-    let options = this._langs.map(l => `<select-option 
+    let options = this._langs
+      .map(
+        l => `<select-option 
       value="${l}" 
-      ${l === 'en-US' ? 'selected' : ''}>${l}</select-option>`).join(' ');
+      ${l === 'en-US' ? 'selected' : ''}>${l}</select-option>`
+      )
+      .join(' ');
 
     this.shadowRoot.querySelector('#langs-holder').innerHTML = `
     <select-field placeholder="locale" id="langs">${options}</select-field>
@@ -70,7 +72,6 @@ export default class ControlPanel extends HTMLElement {
   }
 
   _updateEnv(path, value) {
-
     if (!this._env) {
       return;
     }
@@ -84,27 +85,30 @@ export default class ControlPanel extends HTMLElement {
   }
 
   _dispatchEnvChanged() {
-    this.dispatchEvent(new CustomEvent('env-changed', {
-      bubbles: true,
-      composed: true,
-      detail: {
-        env: this._env
-      }
-    }));
+    this.dispatchEvent(
+      new CustomEvent('env-changed', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          env: this._env
+        }
+      })
+    );
   }
 
   connectedCallback() {
-
     this.shadowRoot.querySelector('#mode').addEventListener('change', e => {
       this._updateEnv('mode', e.detail.value);
     });
 
-    this.shadowRoot.querySelector('#color-contrast').addEventListener('change', e => {
-      if (this._env) {
-        this._env.accessibility = this._env.accessibility || {};
-        this._env.accessibility.colorContrast = e.detail.value;
-        this._dispatchEnvChanged();
-      }
-    });
+    this.shadowRoot
+      .querySelector('#color-contrast')
+      .addEventListener('change', e => {
+        if (this._env) {
+          this._env.accessibility = this._env.accessibility || {};
+          this._env.accessibility.colorContrast = e.detail.value;
+          this._dispatchEnvChanged();
+        }
+      });
   }
 }
