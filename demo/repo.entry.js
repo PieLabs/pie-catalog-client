@@ -1,12 +1,12 @@
 import DemoElement, { Config, model, outcome } from './demo-element';
 
-import { elementsDefined } from '../src/bootstrap/repo';
+import { defineRepoElements } from '../src/bootstrap/repo';
 
 customElements.define('demo-element', DemoElement);
 customElements.define('demo-element-configuration', Config);
 
 let init = () => {
-  elementsDefined
+  defineRepoElements()
     .then(() => {
       let entry = document.querySelector('catalog-entry');
       if (entry) {
@@ -29,8 +29,7 @@ let init = () => {
             forks_count: 1,
             open_issues_count: 1
           }
-        }
-
+        };
       }
 
       let demo = document.querySelector('catalog-demo');
@@ -38,7 +37,7 @@ let init = () => {
 
       demo.configureMap = {
         'demo-element': 'demo-element-configuration'
-      }
+      };
 
       demo.config = {
         models: [
@@ -50,11 +49,11 @@ let init = () => {
             correctResponse: 'a'
           }
         ]
-      }
+      };
 
       demo.controllers = {
         'demo-element': { model, outcome }
-      }
+      };
 
       let container = document.querySelector('catalog-container');
       container.isLoading(false);
@@ -62,6 +61,6 @@ let init = () => {
     .catch(e => {
       console.error(e);
     });
-}
+};
 
 document.addEventListener('DOMContentLoaded', init);
