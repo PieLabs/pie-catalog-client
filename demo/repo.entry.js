@@ -1,12 +1,12 @@
 import DemoElement, { Config, model, outcome } from "./demo-element";
 
-import { elementsDefined } from "../src/bootstrap/repo";
+import { defineRepoElements } from "../src/bootstrap/repo";
 
 customElements.define("demo-element", DemoElement);
 customElements.define("demo-element-configuration", Config);
 
 let init = () => {
-  elementsDefined
+  defineRepoElements()
     .then(() => {
       let entry = document.querySelector("catalog-entry");
       if (entry) {
