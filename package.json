@@ -13,6 +13,7 @@
     "@pie-libs/pie-configure-events": "^1.1.0",
     "@webcomponents/custom-elements": "^1.2.1",
     "@webcomponents/shadycss": "github:webcomponents/shadycss#69704abae0214e3a6516d10ddad44aca878b1c71",
+    "@webcomponents/shadydom": "^1.2.0",
     "debug": "^3.0.1",
     "highlight.js": "^9.9.0",
     "less": "^2.7.2",
