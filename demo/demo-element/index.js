@@ -8,10 +8,11 @@ export default class DemoElement extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `<span id="prompt"></span> 
     <input type="text"></input>
-    <span id="feedback"></span>`;
+    <span id="feedback"></span><div id="role"></div>`;
 
     this._$prompt = this.querySelector('#prompt');
     this._$input = this.querySelector('input');
+    this._$role = this.querySelector('#role');
 
     this._$input.addEventListener('input', (e) => {
       this._session.answer = e.target.value;
@@ -25,6 +26,8 @@ export default class DemoElement extends HTMLElement {
     console.log('model: ', m);
     this._$prompt.textContent = m.prompt;
     this._$input.setAttribute('placeholder', m.placeholder);
+    
+    this._$role.innerHTML = `(role = ${m.role ? m.role : 'student'})`;
     if (m.disabled) {
       this._$input.setAttribute('disabled', 'disabled');
     } else {
@@ -109,14 +112,15 @@ export class Config extends HTMLElement {
 export function model(question, session, env) {
 
   let evaluateMode = env.mode === 'evaluate';
-
+  
   let out = _.extend({}, {
     prompt: question.prompt,
     placeholder: question.placeholder,
     correct: evaluateMode && session.answer === question.correctResponse,
     disabled: env.mode !== 'gather',
     mode: env.mode,
-    correctResponse: evaluateMode && question.correctResponse
+    correctResponse: evaluateMode && question.correctResponse,
+    role: env.role
   });
   return Promise.resolve(out);
 }
