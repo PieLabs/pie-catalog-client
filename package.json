@@ -1,6 +1,6 @@
 {
   "name": "pie-catalog-client",
-  "version": "2.1.0-prerelease",
+  "version": "2.1.0",
   "description": "The client code for the catalog",
   "scripts": {
     "test": "./node_modules/.bin/webpack --config test-build/webpack.config.js && wct",
