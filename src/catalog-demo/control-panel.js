@@ -26,10 +26,9 @@ const templateHTML = `
       <select-option value="evaluate">evaluate</select-option>
     </select-field>
 
-    <select-field id="color-contrast" placeholder="color contrast">
-      <select-option value="black_on_white" selected>black on white</select-option>
-      <select-option value="white_on_black">white on black</select-option>
-      <select-option value="black_on_rose">black on rose</select-option>
+    <select-field id="role" placeholder="user role">
+      <select-option value="student" selected>student</select-option>
+      <select-option value="instructor">instructor</select-option>
     </select-field>
 
     <span id="langs-holder"></span>
@@ -101,14 +100,11 @@ export default class ControlPanel extends HTMLElement {
       this._updateEnv('mode', e.detail.value);
     });
 
-    this.shadowRoot
-      .querySelector('#color-contrast')
-      .addEventListener('change', e => {
-        if (this._env) {
-          this._env.accessibility = this._env.accessibility || {};
-          this._env.accessibility.colorContrast = e.detail.value;
-          this._dispatchEnvChanged();
-        }
-      });
+    this.shadowRoot.querySelector('#role').addEventListener('change', e => {
+      if (this._env) {
+        this._env.role = e.detail.value;
+        this._dispatchEnvChanged();
+      }
+    });
   }
 }

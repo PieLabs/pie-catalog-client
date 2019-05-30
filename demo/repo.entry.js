@@ -1,6 +1,6 @@
 import DemoElement, { Config, model, outcome } from './demo-element';
 
-import { defineRepoElements, events } from '../src';
+import { defineRepoElements } from '../src/bootstrap/repo';
 
 customElements.define('demo-element', DemoElement);
 customElements.define('demo-element-configuration', Config);
@@ -29,8 +29,7 @@ let init = () => {
             forks_count: 1,
             open_issues_count: 1
           }
-        }
-
+        };
       }
 
       let demo = document.querySelector('catalog-demo');
@@ -38,7 +37,7 @@ let init = () => {
 
       demo.configureMap = {
         'demo-element': 'demo-element-configuration'
-      }
+      };
 
       demo.config = {
         models: [
@@ -50,11 +49,11 @@ let init = () => {
             correctResponse: 'a'
           }
         ]
-      }
+      };
 
       demo.controllers = {
         'demo-element': { model, outcome }
-      }
+      };
 
       demo.session = [
         { id: '1', value: 'b' }
@@ -66,6 +65,6 @@ let init = () => {
     .catch(e => {
       console.error(e);
     });
-}
+};
 
 document.addEventListener('DOMContentLoaded', init);

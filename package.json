@@ -1,6 +1,6 @@
 {
   "name": "pie-catalog-client",
-  "version": "2.2.0",
+  "version": "2.1.0-prerelease",
   "description": "The client code for the catalog",
   "scripts": {
     "test": "./node_modules/.bin/webpack --config test-build/webpack.config.js && wct",
@@ -28,6 +28,7 @@
     "gulp": "^3.9.1",
     "less-loader": "^2.2.3",
     "raw-loader": "^0.5.1",
+    "release-helper": "github:pielabs/release-helper#v1.5.1",
     "style-loader": "^0.13.1",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.1",
