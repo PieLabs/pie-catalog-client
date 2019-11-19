@@ -75,7 +75,7 @@ export default class ItemPreview extends HTMLElement {
 
   setSession(s) {
     this._session = s;
-    return this._updatePies(this._session);
+    return this._updatePies(false);
   }
 
   set controllers(c) {
